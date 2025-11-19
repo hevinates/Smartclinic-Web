@@ -1,0 +1,117 @@
+@{
+    int userId = Context.Session.GetInt32("UserId") ?? 0;
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.BodyClass = "patient-bg";
+}
+
+<style>
+
+    /* HASTA PANELİ ARKA PLANI (body değil!) */
+    .patient-bg {
+        background-image: url('/images/patient_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f837d;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .menu-grid {
+        display: flex;
+        justify-content: center;
+        gap: 45px;
+        flex-wrap: nowrap;
+    }
+
+    .menu-item {
+        background: white;
+        width: 180px;
+        height: 180px;
+        border-radius: 20px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f837d;
+
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .menu-item i {
+        font-size: 45px;
+        margin-bottom: 12px;
+        color: #0f837d;
+    }
+
+    .menu-item:hover {
+        background-color: #0f837d;
+        color: white;
+        transform: translateY(-5px);
+        box-shadow: 0px 12px 30px rgba(0,0,0,0.20);
+    }
+
+    .menu-item:hover i {
+        color: white;
+    }
+
+</style>
+
+
+<div class="container">
+
+    <div class="title">Hoş geldiniz!</div>
+
+    <div class="menu-grid">
+
+        <a class="menu-item" href="/Patient/Profile?id=@userId">
+            <i class="fa-solid fa-user"></i>
+            Profilim
+        </a>
+
+        <a class="menu-item" href="/Patient/Tests">
+            <i class="fa-solid fa-vial"></i>
+            Tahlillerim
+        </a>
+
+        <a class="menu-item" href="/Patient/Reports">
+            <i class="fa-solid fa-chart-line"></i>
+            Raporlama
+        </a>
+
+        <a class="menu-item" href="/Patient/Chatbot">
+            <i class="fa-solid fa-robot"></i>
+            Chatbot
+        </a>
+
+        <a class="menu-item" href="/Patient/Suggestions">
+            <i class="fa-solid fa-lightbulb"></i>
+            Öneriler
+        </a>
+
+    </div>
+
+</div>

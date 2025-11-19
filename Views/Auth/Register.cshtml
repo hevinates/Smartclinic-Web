@@ -1,0 +1,86 @@
+@{
+    ViewBag.BodyClass = "main-bg";
+}
+
+@{
+    ViewData["Title"] = "Register";
+    var role = Context.Request.Query["role"].ToString();
+}
+
+<style>
+    body {
+        background-color: #f7fdfd;
+        font-family: Poppins, sans-serif;
+    }
+
+    .register_box {
+        max-width: 420px;
+        margin: auto;
+        margin-top: 70px;
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .title {
+        font-size: 34px;
+        font-weight: 700;
+        color: #0f837d;
+        margin-bottom: 8px;
+    }
+
+    .role_text {
+        font-size: 18px;
+        color: #0f837d;
+        margin-bottom: 25px;
+    }
+
+    .input_box {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .btn_register {
+        width: 100%;
+        margin-top: 25px;
+        padding: 14px;
+        background-color: #0f837d;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn_register:hover {
+        background-color: #0c6a63;
+    }
+</style>
+
+<div class="register_box">
+
+    <div class="title">Kayıt Ol</div>
+
+    <div class="role_text">
+        
+    </div>
+
+    <form method="post" action="/Auth/Register">
+        <input type="hidden" name="role" value="@role" />
+
+        <input type="text" name="name" placeholder="Ad" class="input_box" required />
+        <input type="text" name="surname" placeholder="Soyad" class="input_box" required />
+
+        <input type="email" name="email" placeholder="Email" class="input_box" required />
+        <input type="password" name="password" placeholder="Şifre" class="input_box" required />
+
+        <button type="submit" class="btn_register">Kayıt Ol</button>
+    </form>
+</div>

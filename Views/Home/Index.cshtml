@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.BodyClass = "main-bg";
+}
+
+@{
+    ViewData["Title"] = "SmartClinic";
+}
+
+<style>
+    body {
+        background-color: #f7fdfd;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .title {
+        font-size: 52px;
+        font-weight: 700;
+        color: #0f837d;
+        letter-spacing: 2px;
+        animation: wave 2s infinite ease-in-out;
+        margin-bottom: 20px;
+    }
+
+    @@keyframes wave {
+        0%   { transform: translateY(0px); }
+        50%  { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .role-button {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        font-size: 20px;
+        font-weight: 600;
+        background-color: #0f837d;
+        color: white;
+        cursor: pointer;
+        margin-top: 12px;
+        transition: 0.2s;
+    }
+
+    .role-button:hover {
+        background-color: #0c6a63;
+    }
+
+    .container-box {
+        max-width: 420px;
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .logo-img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+    <div class="container-box">
+
+        <div class="title">SmartClinic</div>
+
+        <img src="~/images/logo.png" class="logo-img" />
+
+        <button class="role-button" onclick="location.href='/Auth/Login?role=doctor'">
+            Doktor Girişi
+        </button>
+
+        <button class="role-button" onclick="location.href='/Auth/Login?role=patient'">
+            Hasta Girişi
+        </button>
+
+    </div>
+</div>

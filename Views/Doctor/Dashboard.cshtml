@@ -1,0 +1,104 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "doctor-bg";
+}
+
+<style>
+
+    .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f837d;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .menu-grid {
+        display: flex;
+        justify-content: center;
+        gap: 45px;
+        flex-wrap: nowrap;
+    }
+
+    .menu-item {
+        background: white;
+        width: 180px;
+        height: 180px;
+        border-radius: 20px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f837d;
+
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .menu-item i {
+        font-size: 45px;
+        margin-bottom: 12px;
+        color: #0f837d;
+    }
+
+    .menu-item:hover {
+        background-color: #0f837d;
+        color: white;
+        transform: translateY(-5px);
+        box-shadow: 0px 12px 30px rgba(0,0,0,0.20);
+    }
+
+    .menu-item:hover i {
+        color: white;
+    }
+
+</style>
+
+
+<div class="container">
+
+    <div class="title">Doktor Paneli</div>
+
+    <div class="menu-grid">
+
+        <a class="menu-item" href="/Doctor/Profile">
+            <i class="fa-solid fa-user-doctor"></i>
+            Profilim
+        </a>
+
+        <a class="menu-item" href="/Doctor/Patients">
+            <i class="fa-solid fa-users"></i>
+            Hastalarım
+        </a>
+
+        <a class="menu-item" href="/Doctor/Appointments">
+            <i class="fa-solid fa-calendar-check"></i>
+            Randevular
+        </a>
+
+        <a class="menu-item" href="/Doctor/LabRequests">
+            <i class="fa-solid fa-vial-circle-check"></i>
+            Lab istekleri
+        </a>
+
+        <!-- 🔥 BURADA MESAJLAR ANALİZLER OLARAK DEĞİŞTİ -->
+        <a class="menu-item" href="/Doctor/Analytics">
+            <i class="fa-solid fa-chart-line"></i>
+            Analizler
+        </a>
+
+    </div>
+
+</div>

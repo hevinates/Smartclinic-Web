@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - smartclinic_web</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/smartclinic_web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+
+        .main-body-container,
+        .container {
+            background: transparent !important;
+        }
+        .custom-navbar {
+            width: 100%;
+            height: 65px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 0 30px;
+
+            font-family: Poppins, sans-serif;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+
+        /* SOLDAN LOGO + YAZI */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f837d;
+        }
+
+        .nav-logo {
+            width: 38px;
+            height: auto;
+        }
+
+        /* ÇIKIŞ YAP BUTONU */
+        .logout-btn {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #0f837d;
+            color: white !important;
+            border-radius: 10px;
+            text-decoration: none !important;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            transition: background-color 0.25s ease, transform 0.2s ease;
+        }
+
+        .logout-btn i {
+            font-size: 18px;
+        }
+
+        .logout-btn:hover {
+            background-color: #0c6a63;
+            transform: translateY(-3px);
+            color: white !important;
+        }
+        body.patient-bg {
+            background-image: url('@Url.Content("~/images/patient_bg.png")') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
+        .doctor-bg {
+            background-image: url('/images/doctor_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        body.main-bg {
+            background-image: url('@Url.Content("~/images/main_bg.png")') !important;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+        }
+
+
+    </style>
+</head>
+
+<!-- 🌟 Önemli değişiklik burada -->
+<body class="@ViewBag.BodyClass">
+
+    <nav class="custom-navbar">
+        <div class="nav-left">
+            <img src="/images/logo.png" class="nav-logo" />
+            SmartClinic
+        </div>
+
+        <div class="nav-right">
+            <a href="/Home/Index" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Çıkış Yap
+            </a>
+        </div>
+        
+    </nav>
+
+
+    <div class="main-body-container" style="padding-top: 90px;">
+        @RenderBody()
+    </div>
+
+    <!-- JS -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

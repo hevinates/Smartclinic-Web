@@ -1,0 +1,107 @@
+@{
+    ViewBag.BodyClass = "main-bg";
+}
+
+@{
+    ViewData["Title"] = "Login";
+    var role = Context.Request.Query["role"].ToString();
+}
+
+<style>
+    body {
+        background-color: #f7fdfd;
+        font-family: Poppins, sans-serif;
+    }
+
+    .login_box {
+        max-width: 420px;
+        margin: auto;
+        margin-top: 70px;
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .title {
+        font-size: 34px;
+        font-weight: 700;
+        color: #0f837d;
+        margin-bottom: 20px;
+    }
+
+    .input_box {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .btn_login {
+        width: 100%;
+        margin-top: 25px;
+        padding: 14px;
+        background-color: #0f837d;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn_login:hover {
+        background-color: #0c6a63;
+    }
+</style>
+
+<div class="login_box">
+
+    <div class="title">Giriş Yap</div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div style="color:red; margin-bottom:15px;">
+            @ViewBag.Error
+        </div>
+    }
+
+    <div style="font-size: 18px; color: #0f837d; margin-bottom: 20px;">
+        @{
+            if (role == "doctor")
+            {
+                <span>Doktor Paneli</span>
+            }
+            else if (role == "patient")
+            {
+                <span>Hasta Paneli</span>
+            }
+            else
+            {
+                <span>Giriş</span>
+            }
+        }
+    </div>
+
+    <form method="post" action="/Auth/Login">
+
+        <!-- BU SATIR EKLENDİ (GEREKEN TEK DÜZELTME) -->
+        <input type="hidden" name="role" value="@role" />
+
+        <input type="email" name="email" placeholder="Email" class="input_box" required />
+        <input type="password" name="password" placeholder="Şifre" class="input_box" required />
+
+        <button type="submit" class="btn_login">Giriş Yap</button>
+
+        <div style="margin-top: 18px; font-size: 15px;">
+            Henüz hesabınız yok mu?
+            <a href="/Auth/Register?role=@role" style="color: #0f837d; font-weight: 600;">
+                Kaydol
+            </a>
+        </div>
+    </form>
+
+</div>

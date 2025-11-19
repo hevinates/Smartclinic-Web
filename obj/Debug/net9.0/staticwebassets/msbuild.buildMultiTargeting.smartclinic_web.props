@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/smartclinic_web.props" />
+</Project>
