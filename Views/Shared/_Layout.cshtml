@@ -12,23 +12,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
-
         .main-body-container,
         .container {
             background: transparent !important;
         }
+
         .custom-navbar {
             width: 100%;
             height: 65px;
             background-color: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
             display: flex;
             justify-content: space-between;
             align-items: center;
-
             padding: 0 30px;
-
             font-family: Poppins, sans-serif;
             position: fixed;
             top: 0;
@@ -36,7 +33,6 @@
             z-index: 999;
         }
 
-        /* SOLDAN LOGO + YAZI */
         .nav-left {
             display: flex;
             align-items: center;
@@ -46,36 +42,38 @@
             color: #0f837d;
         }
 
+        .nav-right {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0px;
+        }
+
         .nav-logo {
             width: 38px;
             height: auto;
         }
 
-        /* ÇIKIŞ YAP BUTONU */
-        .logout-btn {
-            font-size: 18px;
-            padding: 10px 20px;
-            background-color: #0f837d;
-            color: white !important;
-            border-radius: 10px;
+        /* 🌟 Modern şeffaf buton tasarımı */
+        .nav-btn {
+            font-size: 17px;
+            padding: 10px 18px;
+            background-color: transparent;
+            color: #0f837d !important;
+            border-radius: 8px;
             text-decoration: none !important;
-
             display: flex;
             align-items: center;
-            gap: 10px;
-
-            transition: background-color 0.25s ease, transform 0.2s ease;
+            gap: 8px;
+            transition: 0.25s ease;
         }
 
-        .logout-btn i {
-            font-size: 18px;
+        .nav-btn:hover {
+            background-color: rgba(15, 131, 125, 0.12);
+            transform: translateY(-2px);
+            color: #0c6a63 !important;
         }
 
-        .logout-btn:hover {
-            background-color: #0c6a63;
-            transform: translateY(-3px);
-            color: white !important;
-        }
         body.patient-bg {
             background-image: url('@Url.Content("~/images/patient_bg.png")') !important;
             background-size: cover !important;
@@ -83,12 +81,14 @@
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
         }
+
         .doctor-bg {
             background-image: url('/images/doctor_bg.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
+
         body.main-bg {
             background-image: url('@Url.Content("~/images/main_bg.png")') !important;
             background-size: cover !important;
@@ -96,12 +96,9 @@
             background-position: center !important;
             background-attachment: fixed !important;
         }
-
-
     </style>
 </head>
 
-<!-- 🌟 Önemli değişiklik burada -->
 <body class="@ViewBag.BodyClass">
 
     <nav class="custom-navbar">
@@ -111,14 +108,38 @@
         </div>
 
         <div class="nav-right">
-            <a href="/Home/Index" class="logout-btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Çıkış Yap
-            </a>
-        </div>
-        
-    </nav>
 
+            @* SESSION'DAN ROL ALINIYOR *@
+            @{
+                var role = Context.Session.GetString("UserRole");
+            }
+
+            @* SADECE ROL VARSA (hasta veya doktor) BUTONLAR GÖRÜNECEK *@
+            @if (role == "patient" || role == "doctor")
+            {
+                @* Ana Menü *@
+                if (role == "patient")
+                {
+                    <a href="/Patient/Dashboard" class="nav-btn">
+                        <i class="fa-solid fa-house"></i> Ana Menü
+                    </a>
+                }
+                else if (role == "doctor")
+                {
+                    <a href="/Doctor/Dashboard" class="nav-btn">
+                        <i class="fa-solid fa-house"></i> Ana Menü
+                    </a>
+                }
+
+                @* Çıkış Yap *@
+                <a href="/Home/Logout" class="nav-btn" style="margin-left: 10px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+                </a>
+            }
+
+        </div>
+
+    </nav>
 
     <div class="main-body-container" style="padding-top: 90px;">
         @RenderBody()

@@ -25,7 +25,7 @@
     }
 
     .title {
-        font-size: 34px;
+        font-size: 38px;
         font-weight: 700;
         color: #0f837d;
         margin-bottom: 20px;
@@ -60,7 +60,7 @@
 
 <div class="login_box">
 
-    <div class="title">Giriş Yap</div>
+    
 
     @if (ViewBag.Error != null)
     {
@@ -69,7 +69,9 @@
         </div>
     }
 
-    <div style="font-size: 18px; color: #0f837d; margin-bottom: 20px;">
+
+
+    <div style="font-size: 34px; color: #0f837d; margin-bottom: 20px;">
         @{
             if (role == "doctor")
             {
@@ -85,6 +87,13 @@
             }
         }
     </div>
+
+        <a href="/Home/Index" 
+        style="display:inline-flex; align-items:center; gap:8px; 
+                margin-bottom:15px; color:#0f837d69; text-decoration:none; 
+                font-size:16px; font-weight:500; transition:0.2s;">
+            <i class="fa-solid fa-arrow-left"></i> Rol seçim sayfasına dön
+        </a>
 
     <form method="post" action="/Auth/Login">
 

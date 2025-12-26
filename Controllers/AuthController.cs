@@ -15,7 +15,7 @@ namespace smartclinic_web.Controllers
             _context = context;
         }
 
-        // LOGIN SAYFASI
+        // LOGIN GET
         public IActionResult Login(string role)
         {
             ViewBag.Role = role;
@@ -36,11 +36,10 @@ namespace smartclinic_web.Controllers
                 return View();
             }
 
-            // *** KULLANICI ID'SINI SESSION'A KAYDET ***
+            // ⭐ ROL BURADA SESSION'A KAYDEDİLİYOR
+            HttpContext.Session.SetString("UserRole", role);
             HttpContext.Session.SetInt32("UserId", user.Id);
-            HttpContext.Session.SetString("UserRole", user.Role ?? "unknown");
 
-            // ROLE'E GÖRE DASHBOARD'A GÖNDER
             if (role == "doctor")
                 return RedirectToAction("Dashboard", "Doctor");
 
@@ -50,7 +49,7 @@ namespace smartclinic_web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // REGISTER SAYFASI
+        // REGISTER GET 
         public IActionResult Register(string role)
         {
             ViewBag.Role = role;
@@ -75,5 +74,57 @@ namespace smartclinic_web.Controllers
 
             return RedirectToAction("Login", new { role = role });
         }
+
+        // API: GET USER BY EMAIL
+        [HttpGet]
+        [Route("api/auth/user/{email}")]
+        public IActionResult GetUserByEmail(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            
+            if (user == null)
+                return NotFound(new { message = "Kullanıcı bulunamadı" });
+
+            return Ok(new
+            {
+                user.Id,
+                user.Name,
+                user.Surname,
+                user.Email,
+                user.Role
+            });
+        }
+
+        // API: LOGIN (for mobile app)
+        [HttpPost]
+        [Route("api/auth/login")]
+        public IActionResult ApiLogin([FromBody] LoginRequest request)
+        {
+            var user = _context.Users
+                .FirstOrDefault(u => u.Email == request.Email && u.Password == request.Password);
+
+            if (user == null)
+                return Unauthorized(new { message = "Email veya şifre hatalı" });
+
+            return Ok(new
+            {
+                message = "Giriş başarılı",
+                user = new
+                {
+                    id = user.Id,
+                    firstName = user.Name,
+                    lastName = user.Surname,
+                    email = user.Email,
+                    role = user.Role
+                }
+            });
+        }
+    }
+
+    // DTO for login request
+    public class LoginRequest
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }

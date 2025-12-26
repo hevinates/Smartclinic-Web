@@ -1,0 +1,212 @@
+@model List<smartclinic_web.Models.TestResult>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "patient-bg";
+
+    var testDate = ((DateTime)ViewBag.TestDate).ToString("dd.MM.yyyy");
+}
+
+<style>
+    .test-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        background: #ffffffdd;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+        position: relative;
+    }
+
+    .test-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .back-btn-top {
+        position: absolute;
+        left: 0;
+        background: #0f837d;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .back-btn-top:hover {
+        background: #0c6a63;
+        transform: translateY(-2px);
+    }
+
+    .test-title {
+        font-size: 34px;
+        font-weight: 700;
+        color: #0f837d;
+        text-align: center;
+    }
+
+    /* Sağ üstte filtre */
+    .filter-box {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+    }
+
+    .filter-label {
+        font-size: 15px;
+        font-weight: 600;
+        color: #0f837d;
+    }
+
+    /* Toggle Switch */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #0f837d;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+
+    .test-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .test-table th {
+        background: #0f837d;
+        color: white;
+        padding: 14px;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .test-table td {
+        padding: 12px 14px;
+        font-size: 16px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    /* Hover efekti */
+    .test-table tbody tr:hover {
+        background: rgba(15, 131, 125, 0.08);
+        transition: 0.2s ease;
+        cursor: pointer;
+    }
+
+    .value-ok {
+        color: #0f837d;
+        font-weight: 600;
+    }
+
+    .row-bad td {
+        color: red !important;
+        font-weight: 700;
+    }
+</style>
+
+<div class="test-container">
+
+    <!-- Geri Dön + Başlık + Filtre -->
+    <div class="test-header">
+
+        <a href="/Patient/Tests" class="back-btn-top">← Geri Dön</a>
+
+        <div class="test-title">@testDate Tarihli Tahlil</div>
+
+        <div class="filter-box">
+            <span class="filter-label">Sadece Referans Dışı</span>
+            <label class="switch">
+                <input type="checkbox" id="filterToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+    </div>
+
+    <table class="test-table">
+        <thead>
+            <tr>
+                <th style="width:40%">Tahlil Adı</th>
+                <th style="width:25%">Sonuç</th>
+                <th style="width:25%">Referans Aralığı</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var t in Model)
+        {
+            string rowClass = t.IsOutOfRange ? "row-bad" : "";
+            string css = t.IsOutOfRange ? "value-bad" : "value-ok";
+
+            <tr class="@rowClass">
+                <td>@t.TestName</td>
+                <td class="@css">@t.Value</td>
+                <td>@t.ReferenceRange</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    document.getElementById("filterToggle").addEventListener("change", function () {
+        let onlyBad = this.checked;
+        let rows = document.querySelectorAll(".test-table tbody tr");
+
+        rows.forEach(row => {
+            if (onlyBad) {
+                if (!row.classList.contains("row-bad")) {
+                    row.style.display = "none";
+                }
+            } else {
+                row.style.display = "";
+            }
+        });
+    });
+</script>

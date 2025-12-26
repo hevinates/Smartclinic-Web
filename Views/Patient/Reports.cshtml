@@ -1,0 +1,277 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "patient-bg";
+}
+
+<style>
+    .patient-bg {
+        background-image: url('/images/patient_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .page-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .back-button {
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #0f837d;
+        font-size: 20px;
+    }
+
+    .back-button:hover {
+        background: #0f837d;
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0px 4px 15px rgba(15, 131, 125, 0.3);
+    }
+
+    .page-title {
+        color: #0f837d;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 0;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .back-btn {
+        display: none;
+    }
+
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+        text-align: center;
+        transition: 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .stat-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card.total .stat-icon {
+        color: #0f837d;
+    }
+
+    .stat-card.in-range .stat-icon {
+        color: #28a745;
+    }
+
+    .stat-card.out-of-range .stat-icon {
+        color: #dc3545;
+    }
+
+    .stat-value {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stat-card.total .stat-value {
+        color: #0f837d;
+    }
+
+    .stat-card.in-range .stat-value {
+        color: #28a745;
+    }
+
+    .stat-card.out-of-range .stat-value {
+        color: #dc3545;
+    }
+
+    .stat-label {
+        font-size: 18px;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+        margin-bottom: 30px;
+    }
+
+    .chart-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f837d;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .chart-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+    }
+
+    .no-data i {
+        font-size: 80px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .no-data h3 {
+        color: #666;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .no-data p {
+        color: #999;
+        font-size: 16px;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/Patient/Dashboard" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 class="page-title">Tahlil Raporlama</h2>
+    </div>
+
+    @if (ViewBag.TotalTests > 0)
+    {
+        <div class="stats-container">
+            <div class="stat-card total">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-vials"></i>
+                </div>
+                <div class="stat-value">@ViewBag.TotalTests</div>
+                <div class="stat-label">Toplam Tahlil</div>
+            </div>
+
+            <div class="stat-card in-range">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="stat-value">@ViewBag.InRangeTests</div>
+                <div class="stat-label">Referans İçi</div>
+            </div>
+
+            <div class="stat-card out-of-range">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+                <div class="stat-value">@ViewBag.OutOfRangeTests</div>
+                <div class="stat-label">Referans Dışı</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Yüzdelik Dağılım</div>
+            <div class="chart-wrapper">
+                <canvas id="percentageChart"></canvas>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="no-data">
+            <i class="fa-solid fa-chart-line"></i>
+            <h3>Henüz Tahlil Yok</h3>
+            <p>Raporlama görebilmek için önce tahlil yüklemeniz gerekiyor.</p>
+            <a href="/Patient/UploadTest" class="back-btn" style="margin-top: 20px;">
+                <i class="fa-solid fa-upload"></i> Tahlil Yükle
+            </a>
+        </div>
+    }
+</div>
+
+@if (ViewBag.TotalTests > 0)
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Pie Chart
+        const ctx2 = document.getElementById('percentageChart');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Referans İçi', 'Referans Dışı'],
+                datasets: [{
+                    data: [@ViewBag.InRangeTests, @ViewBag.OutOfRangeTests],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(220, 53, 69, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

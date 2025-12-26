@@ -36,8 +36,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aC9SZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/hevinates/Developer/smartclinic_web/Views/Doctor/Analytics.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL0FuYWx5dGljcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Doctor/Appointments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL0FwcG9pbnRtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/hevinates/Developer/smartclinic_web/Views/Doctor/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL0Rhc2hib2FyZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Doctor/Messages.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL01lc3NhZ2VzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Doctor/Patients.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL1BhdGllbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Doctor/PatientTestDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL1BhdGllbnRUZXN0RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Doctor/PatientTests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRG9jdG9yL1BhdGllbnRUZXN0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/hevinates/Developer/smartclinic_web/Views/Doctor/Profile.cshtml]
@@ -52,12 +76,44 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/BookAppointment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9Cb29rQXBwb2ludG1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/Chatbot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9DaGF0Ym90LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/hevinates/Developer/smartclinic_web/Views/Patient/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9EYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/Messages.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9NZXNzYWdlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/hevinates/Developer/smartclinic_web/Views/Patient/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9Qcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/Reports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9SZXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/Suggestions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9TdWdnZXN0aW9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/TestDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9UZXN0RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/Tests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9UZXN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/UploadTest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9VcGxvYWRUZXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/hevinates/Developer/smartclinic_web/Views/Shared/Error.cshtml]

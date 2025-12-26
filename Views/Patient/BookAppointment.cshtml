@@ -1,0 +1,518 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "patient-bg";
+}
+
+<style>
+    .patient-bg {
+        background-image: url('/images/patient_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .page-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .back-button {
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #0f837d;
+        font-size: 20px;
+    }
+
+    .back-button:hover {
+        background: #0f837d;
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0px 4px 15px rgba(15, 131, 125, 0.3);
+    }
+
+    .page-title {
+        color: #0f837d;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 0;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .back-btn {
+        display: none;
+    }
+
+    .appointment-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 15px;
+    }
+
+    .form-control, .form-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0f837d;
+        outline: none;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .time-slots {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+
+    .time-slot {
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s ease;
+        background: white;
+        font-weight: 600;
+    }
+
+    .time-slot:hover {
+        border-color: #0f837d;
+        background: #f0fffe;
+    }
+
+    .time-slot.selected {
+        background: #0f837d;
+        color: white;
+        border-color: #0f837d;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #0f837d 0%, #0c6963 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(15,131,125,0.3);
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background-color: #0f837d;
+        color: white;
+        text-decoration: none;
+        border-radius: 50%;
+        font-size: 20px;
+        transition: 0.2s ease;
+        position: fixed;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+    }
+
+    .back-btn:hover {
+        background-color: #0c6963;
+        transform: translateY(-50%) scale(1.1);
+        color: white;
+    }
+
+    .alert {
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .doctor-info {
+        background: #f0fffe;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #0f837d;
+    }
+
+    /* Randevular Bölümü */
+    .appointments-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f837d;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .appointments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .appointment-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 20px;
+        align-items: center;
+        border-left: 4px solid #dee2e6;
+        transition: 0.2s ease;
+    }
+
+    .appointment-item:hover {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transform: translateX(5px);
+    }
+
+    .appointment-item.pending {
+        border-left-color: #ffc107;
+    }
+
+    .appointment-item.approved {
+        border-left-color: #28a745;
+    }
+
+    .appointment-item.rejected {
+        border-left-color: #dc3545;
+    }
+
+    .appointment-item.completed {
+        border-left-color: #6c757d;
+    }
+
+    .appointment-date {
+        text-align: center;
+        min-width: 80px;
+    }
+
+    .appointment-day {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0f837d;
+        line-height: 1;
+    }
+
+    .appointment-month {
+        font-size: 14px;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+
+    .appointment-details {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .appointment-doctor {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .appointment-time {
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+    .appointment-reason {
+        font-size: 13px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .appointment-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        min-width: 120px;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .status-completed {
+        background: #e2e3e5;
+        color: #383d41;
+    }
+
+    .no-appointments {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+    }
+
+    .no-appointments i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/Patient/Dashboard" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 class="page-title">Randevu Al</h2>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fa-solid fa-check-circle"></i> @TempData["Success"]
+        </div>
+    }
+
+    @* Gelecek Randevularım Bölümü *@
+    <div class="appointments-section">
+        <div class="section-title">
+            <i class="fa-solid fa-calendar-days"></i>
+            Randevularım
+        </div>
+
+        @if (ViewBag.Appointments != null && ViewBag.Appointments.Count > 0)
+        {
+            <div class="appointments-list">
+                @foreach (var appointment in ViewBag.Appointments)
+                {
+                    string statusClass = appointment.Status.ToLower();
+                    string statusText = appointment.Status switch
+                    {
+                        "Pending" => "Onay Bekliyor",
+                        "Approved" => "Onaylandı",
+                        "Rejected" => "Reddedildi",
+                        "Completed" => "Tamamlandı",
+                        _ => appointment.Status
+                    };
+
+                    <div class="appointment-item @statusClass">
+                        <div class="appointment-date">
+                            <div class="appointment-day">@appointment.AppointmentDate.Day</div>
+                            <div class="appointment-month">@appointment.AppointmentDate.ToString("MMMM")</div>
+                        </div>
+
+                        <div class="appointment-details">
+                            <div class="appointment-doctor">
+                                <i class="fa-solid fa-user-doctor"></i>
+                                Dr. @appointment.Doctor.Name @appointment.Doctor.Surname
+                            </div>
+                            <div class="appointment-time">
+                                <i class="fa-solid fa-clock"></i>
+                                @appointment.AppointmentDate.ToString("dd MMMM yyyy") - @appointment.AppointmentTime
+                            </div>
+                            <div class="appointment-reason">
+                                <i class="fa-solid fa-comment-medical"></i>
+                                @appointment.Reason
+                            </div>
+                        </div>
+
+                        <div class="appointment-status status-@statusClass">
+                            @statusText
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-appointments">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                <p>Henüz randevunuz bulunmuyor.</p>
+            </div>
+        }
+    </div>
+
+    <div class="appointment-card">
+        <form method="post" action="/Patient/BookAppointment" id="appointmentForm">
+            <div class="form-group">
+                <label><i class="fa-solid fa-user-doctor"></i> Doktor Seçin</label>
+                <select name="doctorId" class="form-select" required id="doctorSelect">
+                    <option value="">-- Doktor seçin --</option>
+                    @foreach (dynamic doctor in ViewBag.Doctors)
+                    {
+                        var isSelected = ViewBag.SelectedDoctorId != null && ViewBag.SelectedDoctorId == doctor.Id;
+                        <option value="@doctor.Id" 
+                                data-hospital="@doctor.DoctorHospital"
+                                selected="@isSelected">
+                            @doctor.FullName - @doctor.Specialty
+                        </option>
+                    }
+                </select>
+                <div id="doctorInfo" class="doctor-info" style="display: none; margin-top: 15px;">
+                    <strong>Hastane:</strong> <span id="hospitalName"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-calendar"></i> Randevu Tarihi</label>
+                <input type="date" name="appointmentDate" class="form-control" required 
+                       min="@DateTime.Now.ToString("yyyy-MM-dd")" 
+                       max="@DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd")">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-clock"></i> Randevu Saati</label>
+                <input type="hidden" name="appointmentTime" id="selectedTime" required>
+                <div class="time-slots" id="timeSlots">
+                    <div class="time-slot" data-time="09:00">09:00</div>
+                    <div class="time-slot" data-time="09:30">09:30</div>
+                    <div class="time-slot" data-time="10:00">10:00</div>
+                    <div class="time-slot" data-time="10:30">10:30</div>
+                    <div class="time-slot" data-time="11:00">11:00</div>
+                    <div class="time-slot" data-time="11:30">11:30</div>
+                    <div class="time-slot" data-time="13:00">13:00</div>
+                    <div class="time-slot" data-time="13:30">13:30</div>
+                    <div class="time-slot" data-time="14:00">14:00</div>
+                    <div class="time-slot" data-time="14:30">14:30</div>
+                    <div class="time-slot" data-time="15:00">15:00</div>
+                    <div class="time-slot" data-time="15:30">15:30</div>
+                    <div class="time-slot" data-time="16:00">16:00</div>
+                    <div class="time-slot" data-time="16:30">16:30</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-comment-medical"></i> Randevu Sebebi</label>
+                <textarea name="reason" class="form-control" placeholder="Randevu sebebinizi kısaca belirtin..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-calendar-check"></i> Randevu Talebini Gönder
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Doktor seçildiğinde hastane bilgisini göster
+    document.getElementById('doctorSelect').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const hospital = selectedOption.getAttribute('data-hospital');
+        
+        if (this.value) {
+            document.getElementById('hospitalName').textContent = hospital || 'Bilgi yok';
+            document.getElementById('doctorInfo').style.display = 'block';
+        } else {
+            document.getElementById('doctorInfo').style.display = 'none';
+        }
+    });
+
+    // Sayfa yüklendiğinde seçili doktor varsa bilgilerini göster
+    if (document.getElementById('doctorSelect').value) {
+        document.getElementById('doctorSelect').dispatchEvent(new Event('change'));
+    }
+
+    // Saat seçimi
+    const timeSlots = document.querySelectorAll('.time-slot');
+    const selectedTimeInput = document.getElementById('selectedTime');
+
+    timeSlots.forEach(slot => {
+        slot.addEventListener('click', function() {
+            // Önceki seçimi kaldır
+            timeSlots.forEach(s => s.classList.remove('selected'));
+            
+            // Yeni seçimi ekle
+            this.classList.add('selected');
+            selectedTimeInput.value = this.getAttribute('data-time');
+        });
+    });
+
+    // Form validasyonu
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+        if (!selectedTimeInput.value) {
+            e.preventDefault();
+            alert('Lütfen bir randevu saati seçin!');
+        }
+    });
+</script>

@@ -1,0 +1,3508 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "patient-bg";
+}
+
+<style>
+    .patient-bg {
+        background-image: url('/images/patient_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .page-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+        width: 100%;
+    }
+
+    .back-button {
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #0f837d;
+        font-size: 20px;
+    }
+
+    .back-button:hover {
+        background: #0f837d;
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0px 4px 15px rgba(15, 131, 125, 0.3);
+    }
+
+    .page-title {
+        color: #0f837d;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 0;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .back-btn {
+        display: none;
+    }
+
+    .assistant-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+        padding: 40px;
+        width: 100%;
+        max-width: 900px;
+    }
+
+    .assistant-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .assistant-header i {
+        font-size: 60px;
+        color: #0f837d;
+        margin-bottom: 15px;
+    }
+
+    .assistant-header h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .assistant-header p {
+        color: #666;
+        font-size: 15px;
+    }
+
+    .selection-step {
+        margin-bottom: 30px;
+        display: none;
+    }
+
+    .selection-step.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .step-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .step-number {
+        background: #0f837d;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .custom-select {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #333;
+        background: white;
+        cursor: pointer;
+        transition: 0.2s ease;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230f837d' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 20px center;
+        padding-right: 50px;
+    }
+
+    .custom-select:hover,
+    .custom-select:focus {
+        border-color: #0f837d;
+        outline: none;
+    }
+
+    .condition-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .condition-btn {
+        flex: 1;
+        min-width: 150px;
+        padding: 20px;
+        border: 3px solid #e9ecef;
+        border-radius: 12px;
+        background: white;
+        cursor: pointer;
+        transition: 0.2s ease;
+        text-align: center;
+    }
+
+    .condition-btn:hover {
+        border-color: #0f837d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15,131,125,0.15);
+    }
+
+    .condition-btn.selected {
+        border-color: #0f837d;
+        background: #f0fffe;
+    }
+
+    .condition-btn i {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .condition-btn.high i {
+        color: #dc3545;
+    }
+
+    .condition-btn.low i {
+        color: #ffc107;
+    }
+
+    .condition-btn .label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .result-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 30px;
+        border-left: 5px solid #0f837d;
+    }
+
+    .result-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .result-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: white;
+    }
+
+    .result-icon.critical {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+
+    .result-icon.warning {
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    }
+
+    .result-icon.info {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    }
+
+    .result-title {
+        flex: 1;
+    }
+
+    .result-title h4 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 5px 0;
+    }
+
+    .result-title .test-name {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .criticality-badge {
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .criticality-badge.high {
+        background: #dc3545;
+        color: white;
+    }
+
+    .criticality-badge.medium {
+        background: #ffc107;
+        color: #333;
+    }
+
+    .criticality-badge.low {
+        background: #28a745;
+        color: white;
+    }
+
+    .result-section {
+        margin-bottom: 25px;
+    }
+
+    .result-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .result-section h5 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0f837d;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .result-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .result-section li {
+        padding: 10px 0;
+        padding-left: 25px;
+        position: relative;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .result-section li:before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #0f837d;
+        font-weight: 700;
+    }
+
+    .normal-range {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-top: 15px;
+        border: 2px solid #dee2e6;
+    }
+
+    .normal-range strong {
+        color: #0f837d;
+    }
+
+    .action-buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn-reset {
+        flex: 1;
+        padding: 15px 30px;
+        border: 2px solid #0f837d;
+        background: white;
+        color: #0f837d;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .btn-reset:hover {
+        background: #0f837d;
+        color: white;
+    }
+
+    .btn-consult {
+        flex: 1;
+        padding: 15px 30px;
+        border: none;
+        background: linear-gradient(135deg, #0f837d 0%, #0c6963 100%);
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .btn-consult:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(15,131,125,0.3);
+    }
+
+    .back-btn {
+        display: none;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/Patient/Dashboard" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 class="page-title">Sağlık Asistanı</h2>
+    </div>
+
+    <div class="assistant-container">
+        <div class="assistant-header">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <h3>Test Değeri Sorgulama</h3>
+            <p>Tahlil değerinizi seçin ve durumunuz hakkında detaylı bilgi alın</p>
+        </div>
+
+        <!-- Step 1: Test Değeri Seçimi -->
+        <div class="selection-step active" id="step1">
+            <div class="step-label">
+                <span class="step-number">1</span>
+                Test Değerini Seçin
+            </div>
+            <select class="custom-select" id="testSelect" onchange="selectTest()">
+                <option value="">-- Bir test değeri seçin --</option>
+                <option value="aclik_kan_sekeri">Açlık Kan Şekeri (Glukoz)</option>
+                <option value="albumin">Albumin</option>
+                <option value="alt_sgpt">ALT (SGPT) - Karaciğer Enzimi</option>
+                <option value="ast_sgot">AST (SGOT) - Karaciğer Enzimi</option>
+                <option value="b12_vitamini">B12 Vitamini</option>
+                <option value="basofil">Basofil</option>
+                <option value="bilirubin_direkt">Bilirubin (Direkt)</option>
+                <option value="bilirubin_total">Bilirubin (Total)</option>
+                <option value="bun">BUN (Kan Üre Azotu)</option>
+                <option value="crp">CRP (C-Reaktif Protein)</option>
+                <option value="d_vitamini">D Vitamini</option>
+                <option value="demir">Demir (Fe)</option>
+                <option value="eozinofil">Eozinofil</option>
+                <option value="ferritin">Ferritin</option>
+                <option value="folik_asit">Folik Asit</option>
+                <option value="ggt">GGT (Gamma GT)</option>
+                <option value="hba1c">HbA1c (Glikozile Hemoglobin)</option>
+                <option value="hct">Hematokrit (HCT)</option>
+                <option value="hdl">HDL Kolesterol (İyi Kolesterol)</option>
+                <option value="hemoglobin">Hemoglobin (Hb)</option>
+                <option value="ige">IgE (İmmünoglobulin E)</option>
+                <option value="inr">INR (Kan Pıhtılaşma)</option>
+                <option value="kalp_enzimleri">Kalp Enzimleri (Troponin)</option>
+                <option value="kalsiyum">Kalsiyum (Ca)</option>
+                <option value="kolesterol">Kolesterol (Total)</option>
+                <option value="kreatinin">Kreatinin</option>
+                <option value="ldh">LDH (Laktat Dehidrogenaz)</option>
+                <option value="ldl">LDL Kolesterol (Kötü Kolesterol)</option>
+                <option value="lenfosit">Lenfosit</option>
+                <option value="lipaz">Lipaz</option>
+                <option value="magnezyum">Magnezyum (Mg)</option>
+                <option value="mcv">MCV (Ortalama Eritrosit Hacmi)</option>
+                <option value="monosit">Monosit</option>
+                <option value="notrofil">Nötrofil</option>
+                <option value="plt">PLT (Trombosit)</option>
+                <option value="potasyum">Potasyum (K)</option>
+                <option value="prokalsitonin">Prokalsitonin (PCT)</option>
+                <option value="protein">Protein (Total)</option>
+                <option value="psa">PSA (Prostat Spesifik Antijen)</option>
+                <option value="pt">PT (Protrombin Zamanı)</option>
+                <option value="rbc">RBC (Eritrosit - Alyuvar)</option>
+                <option value="sedimentasyon">Sedimentasyon (ESR)</option>
+                <option value="sodyum">Sodyum (Na)</option>
+                <option value="t3">T3 (Triiyodotironin)</option>
+                <option value="t4">T4 (Tiroksin)</option>
+                <option value="trigliserit">Trigliserit</option>
+                <option value="tsh">TSH (Tiroid Uyarıcı Hormon)</option>
+                <option value="uric_acid">Ürik Asit</option>
+                <option value="ure">Üre</option>
+                <option value="wbc">WBC (Lökosit - Akyuvar)</option>
+            </select>
+        </div>
+
+        <!-- Step 2: Durum Seçimi -->
+        <div class="selection-step" id="step2">
+            <div class="step-label">
+                <span class="step-number">2</span>
+                Test Sonucunuz Nasıl?
+            </div>
+            <div class="condition-buttons">
+                <button class="condition-btn high" onclick="selectCondition('high')">
+                    <i class="fa-solid fa-arrow-up"></i>
+                    <div class="label">Yüksek</div>
+                </button>
+                <button class="condition-btn low" onclick="selectCondition('low')">
+                    <i class="fa-solid fa-arrow-down"></i>
+                    <div class="label">Düşük</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Sonuç -->
+        <div class="selection-step" id="step3">
+            <div class="result-container" id="resultContainer">
+                <!-- Sonuçlar buraya dinamik olarak eklenecek -->
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-reset" onclick="resetAssistant()">
+                    <i class="fa-solid fa-rotate-right"></i> Yeni Sorgulama
+                </button>
+                <button class="btn-consult" onclick="window.location.href='/Patient/Dashboard'">
+                    <i class="fa-solid fa-calendar-check"></i> Randevu Al
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedTest = '';
+    let selectedCondition = '';
+
+    function selectTest() {
+        const select = document.getElementById('testSelect');
+        selectedTest = select.value;
+        
+        if (selectedTest) {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        }
+    }
+
+    function selectCondition(condition) {
+        selectedCondition = condition;
+        
+        // Button seçimi görselleştir
+        document.querySelectorAll('.condition-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        event.target.closest('.condition-btn').classList.add('selected');
+        
+        // Sonucu göster
+        setTimeout(() => {
+            showResult();
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+        }, 300);
+    }
+
+    function showResult() {
+        const resultData = getTestData(selectedTest, selectedCondition);
+        const container = document.getElementById('resultContainer');
+        
+        container.innerHTML = `
+            <div class="result-header">
+                <div class="result-icon ${resultData.severity}">
+                    <i class="fa-solid ${resultData.icon}"></i>
+                </div>
+                <div class="result-title">
+                    <h4>${resultData.title}</h4>
+                    <div class="test-name">${resultData.testName}</div>
+                </div>
+                <div class="criticality-badge ${resultData.severity}">
+                    Kritiklik: %${resultData.criticality}
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h5><i class="fa-solid fa-triangle-exclamation"></i> Belirtiler</h5>
+                <ul>
+                    ${resultData.symptoms.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            </div>
+
+            <div class="result-section">
+                <h5><i class="fa-solid fa-lightbulb"></i> Olası Nedenler</h5>
+                <ul>
+                    ${resultData.causes.map(c => `<li>${c}</li>`).join('')}
+                </ul>
+            </div>
+
+            <div class="result-section">
+                <h5><i class="fa-solid fa-heart"></i> Öneriler</h5>
+                <ul>
+                    ${resultData.recommendations.map(r => `<li>${r}</li>`).join('')}
+                </ul>
+            </div>
+
+            <div class="normal-range">
+                <strong>📊 Normal Değer Aralığı:</strong> ${resultData.normalRange}
+            </div>
+        `;
+    }
+
+    function resetAssistant() {
+        selectedTest = '';
+        selectedCondition = '';
+        document.getElementById('testSelect').value = '';
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step1').classList.add('active');
+    }
+</script>
+
+<script>
+    // Test verileri (30 test için hazır veriler)
+    function getTestData(testId, condition) {
+        const testDatabase = {
+            hemoglobin: {
+                high: {
+                    title: "Yüksek Hemoglobin",
+                    testName: "Hemoglobin (Hb)",
+                    severity: "warning",
+                    icon: "fa-droplet",
+                    criticality: 65,
+                    normalRange: "Erkek: 13.5-17.5 g/dL, Kadın: 12.0-15.5 g/dL",
+                    symptoms: [
+                        "Baş ağrısı ve baş dönmesi",
+                        "Yorgunluk hissi",
+                        "Nefes darlığı",
+                        "Ciltte kızarıklık",
+                        "Bulanık görme"
+                    ],
+                    causes: [
+                        "Dehidrasyon (su eksikliği)",
+                        "Sigara kullanımı",
+                        "Yüksek irtifada yaşama",
+                        "Akciğer hastalıkları (KOAH)",
+                        "Polisitemia vera (nadir kan hastalığı)"
+                    ],
+                    recommendations: [
+                        "Bol su için (günde en az 2-3 litre)",
+                        "Sigarayı bırakın",
+                        "Düzenli kontrol için doktora gidin",
+                        "Aspirin kullanımı (doktor önerisiyle)",
+                        "Kan sulandırıcı ilaçlar gerekebilir"
+                    ]
+                },
+                low: {
+                    title: "Düşük Hemoglobin (Anemi)",
+                    testName: "Hemoglobin (Hb)",
+                    severity: "critical",
+                    icon: "fa-droplet",
+                    criticality: 80,
+                    normalRange: "Erkek: 13.5-17.5 g/dL, Kadın: 12.0-15.5 g/dL",
+                    symptoms: [
+                        "Aşırı yorgunluk ve halsizlik",
+                        "Soluk cilt ve mukoza",
+                        "Nefes darlığı",
+                        "Baş dönmesi",
+                        "Soğuk el ve ayaklar",
+                        "Göğüs ağrısı"
+                    ],
+                    causes: [
+                        "Demir eksikliği",
+                        "B12 vitamini eksikliği",
+                        "Folik asit eksikliği",
+                        "Kronik kan kaybı (adet, ülser)",
+                        "Böbrek hastalığı",
+                        "Kronik hastalıklar"
+                    ],
+                    recommendations: [
+                        "Demir içeren besinler tüketin (kırmızı et, ıspanak, mercimek)",
+                        "C vitamini ile birlikte demir alın (emilimi artırır)",
+                        "B12 ve folik asit takviyesi",
+                        "Kan transfüzyonu gerekebilir (çok düşükse)",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                }
+            },
+            aclik_kan_sekeri: {
+                high: {
+                    title: "Yüksek Kan Şekeri (Hiperglisemi)",
+                    testName: "Açlık Kan Şekeri (Glukoz)",
+                    severity: "critical",
+                    icon: "fa-candy-cane",
+                    criticality: 85,
+                    normalRange: "70-100 mg/dL (açlık)",
+                    symptoms: [
+                        "Aşırı susama",
+                        "Sık idrara çıkma",
+                        "Yorgunluk ve halsizlik",
+                        "Bulanık görme",
+                        "Yavaş iyileşen yaralar",
+                        "Kilo kaybı"
+                    ],
+                    causes: [
+                        "Tip 2 Diyabet",
+                        "Prediabetes (diyabet öncesi)",
+                        "Stres ve hormon bozuklukları",
+                        "Pankreas hastalıkları",
+                        "Kortikosteroid ilaç kullanımı"
+                    ],
+                    recommendations: [
+                        "Şeker ve karbonhidrat alımını azaltın",
+                        "Düzenli egzersiz yapın (günde 30 dk)",
+                        "Kilo verin (fazla kiloluysa)",
+                        "Tam tahıl ve lifli besinler tüketin",
+                        "MUTLAKA endokrinoloji uzmanına gidin",
+                        "HbA1c testi yaptırın"
+                    ]
+                },
+                low: {
+                    title: "Düşük Kan Şekeri (Hipoglisemi)",
+                    testName: "Açlık Kan Şekeri (Glukoz)",
+                    severity: "critical",
+                    icon: "fa-candy-cane",
+                    criticality: 90,
+                    normalRange: "70-100 mg/dL (açlık)",
+                    symptoms: [
+                        "Titreme ve terleme",
+                        "Kalp çarpıntısı",
+                        "Sinirlilik ve kaygı",
+                        "Açlık hissi",
+                        "Baş dönmesi ve bayılma",
+                        "Konsantrasyon bozukluğu"
+                    ],
+                    causes: [
+                        "Diyabet ilaçlarının fazla kullanımı",
+                        "Öğün atlanması",
+                        "Aşırı egzersiz",
+                        "Alkol tüketimi",
+                        "İnsülin fazlalığı"
+                    ],
+                    recommendations: [
+                        "ACİL: Hızlı şeker (2-3 şeker küpü, bal, meyve suyu) alın",
+                        "15 dakika sonra tekrar ölçün",
+                        "Düzenli öğün yapın, atlamayın",
+                        "Ara öğünlerde protein-karbonhidrat dengesi",
+                        "60 mg/dL altıysa ACİL SERVİSE gidin",
+                        "İlaç dozlarınızı gözden geçirin"
+                    ]
+                }
+            },
+            kolesterol: {
+                high: {
+                    title: "Yüksek Kolesterol",
+                    testName: "Total Kolesterol",
+                    severity: "warning",
+                    icon: "fa-heart-crack",
+                    criticality: 70,
+                    normalRange: "< 200 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez",
+                        "Xantelasma (göz çevresinde sarı plaklar)",
+                        "Tendon xantomları",
+                        "Göğüs ağrısı (damar tıkanıklığında)"
+                    ],
+                    causes: [
+                        "Aşırı doymuş yağ tüketimi",
+                        "Hareketsiz yaşam",
+                        "Obezite",
+                        "Genetik faktörler",
+                        "Hipotiroidi"
+                    ],
+                    recommendations: [
+                        "Doymuş yağları azaltın (tereyağı, kırmızı et)",
+                        "Omega-3 açısından zengin balık tüketin",
+                        "Düzenli egzersiz (haftada 5 gün, 30 dk)",
+                        "Sigarayı bırakın",
+                        "Kilo verin (fazlaysa)",
+                        "Statin ilaçları (doktor önerisiyle)"
+                    ]
+                },
+                low: {
+                    title: "Düşük Kolesterol",
+                    testName: "Total Kolesterol",
+                    severity: "info",
+                    icon: "fa-heart",
+                    criticality: 30,
+                    normalRange: "< 200 mg/dL",
+                    symptoms: [
+                        "Depresyon",
+                        "Anksiyete",
+                        "Yorgunluk",
+                        "Konsantrasyon güçlüğü"
+                    ],
+                    causes: [
+                        "Malnütrisyon (yetersiz beslenme)",
+                        "Hipertiroidizm",
+                        "Karaciğer hastalıkları",
+                        "Malabsorpsiyon",
+                        "Genetik faktörler"
+                    ],
+                    recommendations: [
+                        "Sağlıklı yağlar tüketin (zeytinyağı, avokado)",
+                        "Protein alımını artırın",
+                        "Tiroid hormonlarınızı kontrol ettirin",
+                        "Karaciğer fonksiyonlarını inceleyin",
+                        "Dengeli beslenin"
+                    ]
+                }
+            },
+            tsh: {
+                high: {
+                    title: "Yüksek TSH (Hipotiroidizm)",
+                    testName: "TSH (Tiroid Uyarıcı Hormon)",
+                    severity: "warning",
+                    icon: "fa-prescription-bottle",
+                    criticality: 65,
+                    normalRange: "0.4-4.0 mIU/L",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Kilo alma",
+                        "Soğuk hissetme",
+                        "Saç dökülmesi",
+                        "Kabızlık",
+                        "Kuru cilt",
+                        "Depresyon"
+                    ],
+                    causes: [
+                        "Hashimoto tiroiditi",
+                        "İyot eksikliği",
+                        "Tiroid ameliyatı sonrası",
+                        "Radyasyon tedavisi",
+                        "Bazı ilaçlar"
+                    ],
+                    recommendations: [
+                        "Levotiroksin (Thyroxine) ilacı kullanın",
+                        "İyot içeren besinler (deniz ürünleri, yoğurt)",
+                        "Düzenli TSH kontrolü (3-6 ayda bir)",
+                        "İlaç dozunuzu doktor kontrolünde ayarlayın",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük TSH (Hipertiroidizm)",
+                    testName: "TSH (Tiroid Uyarıcı Hormon)",
+                    severity: "warning",
+                    icon: "fa-prescription-bottle",
+                    criticality: 70,
+                    normalRange: "0.4-4.0 mIU/L",
+                    symptoms: [
+                        "Kalp çarpıntısı",
+                        "Kilo kaybı",
+                        "Aşırı terleme",
+                        "Sinirlilik ve titreme",
+                        "Uyku bozuklukları",
+                        "Sıcak hissetme",
+                        "İshal"
+                    ],
+                    causes: [
+                        "Graves hastalığı",
+                        "Toksik nodüler guatr",
+                        "Tiroidit",
+                        "Aşırı tiroid hormonu ilaç kullanımı"
+                    ],
+                    recommendations: [
+                        "Antitiroid ilaçlar (Thiamazol)",
+                        "Beta blokerler (kalp çarpıntısı için)",
+                        "Radyoaktif iyot tedavisi",
+                        "Ameliyat (gerekirse)",
+                        "Kafeini sınırlandırın",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                }
+            },
+            kreatinin: {
+                high: {
+                    title: "Yüksek Kreatinin (Böbrek Yetmezliği)",
+                    testName: "Kreatinin",
+                    severity: "critical",
+                    icon: "fa-kidneys",
+                    criticality: 85,
+                    normalRange: "Erkek: 0.7-1.2 mg/dL, Kadın: 0.5-1.1 mg/dL",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Ödem (şişlik - bacak, ayak)",
+                        "İdrar renginde değişiklik",
+                        "Nefes darlığı",
+                        "Kaşınma",
+                        "Bulantı ve kusma"
+                    ],
+                    causes: [
+                        "Kronik böbrek hastalığı",
+                        "Akut böbrek yetmezliği",
+                        "Dehidrasyon",
+                        "Aşırı protein tüketimi",
+                        "Bazı ilaçlar (NSAİİ, antibiyotikler)",
+                        "Diyabet ve hipertansiyon"
+                    ],
+                    recommendations: [
+                        "BOL SU İÇİN (2-3 litre/gün)",
+                        "Protein alımını kısıtlayın",
+                        "Tuzu azaltın (günde 5g altı)",
+                        "Potasyum ve fosfor kısıtlaması",
+                        "Tansiyon kontrolü önemli",
+                        "ACE inhibitörleri veya ARB ilaçları",
+                        "MUTLAKA nefroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Kreatinin",
+                    testName: "Kreatinin",
+                    severity: "info",
+                    icon: "fa-kidneys",
+                    criticality: 25,
+                    normalRange: "Erkek: 0.7-1.2 mg/dL, Kadın: 0.5-1.1 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez",
+                        "Kas zayıflığı",
+                        "Yorgunluk"
+                    ],
+                    causes: [
+                        "Düşük kas kütlesi",
+                        "Hamilelik",
+                        "Yaşlılık",
+                        "Kronik hastalıklar",
+                        "Aşırı hidrasyon"
+                    ],
+                    recommendations: [
+                        "Protein alımını artırın",
+                        "Kas geliştirici egzersizler",
+                        "Dengeli beslenin",
+                        "Genellikle tedavi gerekmez",
+                        "Kontrole devam edin"
+                    ]
+                }
+            },
+            alt_sgpt: {
+                high: {
+                    title: "Yüksek ALT (Karaciğer Hasarı)",
+                    testName: "ALT (SGPT) - Karaciğer Enzimi",
+                    severity: "critical",
+                    icon: "fa-pills",
+                    criticality: 75,
+                    normalRange: "7-56 U/L",
+                    symptoms: [
+                        "Sağ üst karın ağrısı",
+                        "Yorgunluk",
+                        "Sarılık (ikter)",
+                        "Bulantı ve kusma",
+                        "Koyu renkli idrar"
+                    ],
+                    causes: [
+                        "Yağlı karaciğer hastalığı",
+                        "Viral hepatit (A, B, C)",
+                        "Alkol kullanımı",
+                        "İlaç yan etkileri",
+                        "Otoimmün hepatit",
+                        "Hemokromatozis"
+                    ],
+                    recommendations: [
+                        "ALKOL KULLANMAYIN",
+                        "Kilo verin (yağlı karaciğer için)",
+                        "Hepatotoksik ilaçlardan kaçının",
+                        "Düşük yağlı diyet uygulayın",
+                        "Antioksidan besinler (yeşil çay, zerdeçal)",
+                        "Hepatit aşılarını yaptırın",
+                        "MUTLAKA gastroenteroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük ALT",
+                    testName: "ALT (SGPT) - Karaciğer Enzimi",
+                    severity: "info",
+                    icon: "fa-pills",
+                    criticality: 15,
+                    normalRange: "7-56 U/L",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Normal varyasyon",
+                        "B6 vitamini eksikliği"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "B6 vitamini takviyesi düşünülebilir",
+                        "Dengeli beslenin"
+                    ]
+                }
+            },
+            hdl: {
+                high: {
+                    title: "Yüksek HDL (İyi Durum)",
+                    testName: "HDL Kolesterol (İyi Kolesterol)",
+                    severity: "low",
+                    icon: "fa-heart",
+                    criticality: 10,
+                    normalRange: "Erkek: > 40 mg/dL, Kadın: > 50 mg/dL",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Düzenli egzersiz",
+                        "Sağlıklı beslenme",
+                        "Genetik faktörler"
+                    ],
+                    recommendations: [
+                        "Mevcut yaşam tarzınızı sürdürün",
+                        "Egzersize devam edin",
+                        "Zeytinyağı ve balık tüketmeye devam edin",
+                        "Harika gidiyorsunuz! 🎉"
+                    ]
+                },
+                low: {
+                    title: "Düşük HDL (Risk Faktörü)",
+                    testName: "HDL Kolesterol (İyi Kolesterol)",
+                    severity: "warning",
+                    icon: "fa-heart-crack",
+                    criticality: 70,
+                    normalRange: "Erkek: > 40 mg/dL, Kadın: > 50 mg/dL",
+                    symptoms: [
+                        "Belirti vermez",
+                        "Kalp hastalığı riski artar"
+                    ],
+                    causes: [
+                        "Hareketsiz yaşam",
+                        "Sigara kullanımı",
+                        "Kötü beslenme",
+                        "Obezite",
+                        "Tip 2 diyabet"
+                    ],
+                    recommendations: [
+                        "DÜZENLI EGZERSİZ (en etkili yöntem)",
+                        "Sigarayı bırakın",
+                        "Omega-3 tüketin (balık, ceviz)",
+                        "Zeytinyağı kullanın",
+                        "Kilo verin (fazlaysa)",
+                        "Niasin takviyesi (doktor önerisiyle)"
+                    ]
+                }
+            },
+            ldl: {
+                high: {
+                    title: "Yüksek LDL (Kötü Kolesterol)",
+                    testName: "LDL Kolesterol (Kötü Kolesterol)",
+                    severity: "critical",
+                    icon: "fa-heart-crack",
+                    criticality: 80,
+                    normalRange: "< 100 mg/dL (ideal: < 70 mg/dL)",
+                    symptoms: [
+                        "Genellikle belirti vermez",
+                        "Xantelasma (göz çevresinde sarı plaklar)",
+                        "Göğüs ağrısı (ilerlemiş vakalarda)"
+                    ],
+                    causes: [
+                        "Doymuş yağ tüketimi",
+                        "Trans yağlar",
+                        "Genetik (ailesel hiperkolesterolemi)",
+                        "Obezite",
+                        "Hareketsiz yaşam"
+                    ],
+                    recommendations: [
+                        "Doymuş yağları KESİN AZALTIN",
+                        "Trans yağlardan UZAK DURUN",
+                        "Düzenli egzersiz (haftada 5 gün)",
+                        "Lifli besinler (yulaf, elma, fasulye)",
+                        "Statin ilaçları (Atorvastatin, Rosuvastatin)",
+                        "Omega-3 takviyesi",
+                        "MUTLAKA kardiyoloji kontrolü"
+                    ]
+                },
+                low: {
+                    title: "Düşük LDL (İyi Durum)",
+                    testName: "LDL Kolesterol (Kötü Kolesterol)",
+                    severity: "low",
+                    icon: "fa-heart",
+                    criticality: 15,
+                    normalRange: "< 100 mg/dL (ideal: < 70 mg/dL)",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Sağlıklı beslenme",
+                        "Düzenli egzersiz",
+                        "Statin kullanımı"
+                    ],
+                    recommendations: [
+                        "Mevcut durumunuzu koruyun",
+                        "Dengeli beslenmeye devam edin",
+                        "Çok düşükse (<40) doktorla görüşün"
+                    ]
+                }
+            },
+            d_vitamini: {
+                high: {
+                    title: "Yüksek D Vitamini (Toksik Düzey)",
+                    testName: "D Vitamini",
+                    severity: "warning",
+                    icon: "fa-sun",
+                    criticality: 60,
+                    normalRange: "30-100 ng/mL",
+                    symptoms: [
+                        "Bulantı ve kusma",
+                        "Zayıflık",
+                        "Sık idrara çıkma",
+                        "Böbrek taşı riski",
+                        "Karın ağrısı"
+                    ],
+                    causes: [
+                        "Aşırı D vitamini takviyesi",
+                        "Yanlış doz kullanımı"
+                    ],
+                    recommendations: [
+                        "D vitamini takviyesini DURDURUN",
+                        "Kalsiyum içeren besinleri azaltın",
+                        "Bol su için",
+                        "Doktora danışın",
+                        "Böbrek fonksiyonlarını kontrol ettirin"
+                    ]
+                },
+                low: {
+                    title: "Düşük D Vitamini (Yaygın Eksiklik)",
+                    testName: "D Vitamini",
+                    severity: "warning",
+                    icon: "fa-sun",
+                    criticality: 65,
+                    normalRange: "30-100 ng/mL",
+                    symptoms: [
+                        "Kemik ve kas ağrıları",
+                        "Yorgunluk ve halsizlik",
+                        "Depresyon",
+                        "Bağışıklık zayıflığı",
+                        "Saç dökülmesi"
+                    ],
+                    causes: [
+                        "Yetersiz güneş ışığı",
+                        "Kapalı ortamda çalışma",
+                        "Yaşlılık",
+                        "Koyu cilt",
+                        "Malabsorpsiyon"
+                    ],
+                    recommendations: [
+                        "GÜNDE 15-20 DK GÜNEŞLENİN (11:00-15:00 arası)",
+                        "D vitamini takviyesi (1000-2000 IU/gün)",
+                        "Yağlı balık tüketin (somon, ton)",
+                        "Yumurta sarısı",
+                        "D vitamini zenginleştirilmiş süt",
+                        "3 ay sonra kontrol"
+                    ]
+                }
+            },
+            b12_vitamini: {
+                high: {
+                    title: "Yüksek B12 Vitamini",
+                    testName: "B12 Vitamini",
+                    severity: "info",
+                    icon: "fa-capsules",
+                    criticality: 30,
+                    normalRange: "200-900 pg/mL",
+                    symptoms: [
+                        "Genellikle zararsız",
+                        "Bazen baş ağrısı",
+                        "Cilt döküntüleri (nadiren)"
+                    ],
+                    causes: [
+                        "Aşırı B12 takviyesi",
+                        "Karaciğer hastalığı",
+                        "Böbrek hastalığı",
+                        "Myeloproliferatif hastalıklar"
+                    ],
+                    recommendations: [
+                        "B12 takviyesini azaltın/durdurun",
+                        "Karaciğer ve böbrek fonksiyonlarını kontrol ettirin",
+                        "Genellikle endişe verici değil",
+                        "Doktorunuza danışın"
+                    ]
+                },
+                low: {
+                    title: "Düşük B12 Vitamini (Pernisiyöz Anemi)",
+                    testName: "B12 Vitamini",
+                    severity: "critical",
+                    icon: "fa-capsules",
+                    criticality: 75,
+                    normalRange: "200-900 pg/mL",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "El-ayaklarda uyuşma ve karıncalanma",
+                        "Denge bozukluğu",
+                        "Unutkanlık ve konsantrasyon güçlüğü",
+                        "Depresyon",
+                        "Dil iltihabı (glossitis)",
+                        "Anemi"
+                    ],
+                    causes: [
+                        "Vejetaryen/vegan beslenme",
+                        "Pernisiyöz anemi (otoimmün)",
+                        "Mide ameliyatı",
+                        "Metformin kullanımı",
+                        "Crohn hastalığı",
+                        "Yaşlılık"
+                    ],
+                    recommendations: [
+                        "B12 İĞNESİ (1000 mcg/gün, 1 hafta)",
+                        "Sonra ayda bir idame dozu",
+                        "Hayvansal besinler (et, süt, yumurta)",
+                        "B12 zenginleştirilmiş tahıllar (vejetaryenler için)",
+                        "Ağız altı B12 tabletleri (1000-2000 mcg)",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                }
+            },
+            wbc: {
+                high: {
+                    title: "Yüksek Lökosit (Enfeksiyon/İltihap)",
+                    testName: "WBC (Lökosit - Akyuvar)",
+                    severity: "warning",
+                    icon: "fa-shield-virus",
+                    criticality: 70,
+                    normalRange: "4,000-11,000 /µL",
+                    symptoms: [
+                        "Ateş",
+                        "Yorgunluk",
+                        "Genel rahatsızlık",
+                        "Lenf bezi şişliği",
+                        "Gece terlemeleri"
+                    ],
+                    causes: [
+                        "Bakteriyel enfeksiyon",
+                        "Viral enfeksiyon",
+                        "Yangısal hastalıklar",
+                        "Stres ve travma",
+                        "Sigara kullanımı",
+                        "Lösemi (çok yüksekse)",
+                        "Kortikosteroid kullanımı"
+                    ],
+                    recommendations: [
+                        "Enfeksiyon kaynağını bulun ve tedavi edin",
+                        "Antibiyotik (bakteriyel enfeksiyonda)",
+                        "Bol sıvı tüketin",
+                        "İstirahat edin",
+                        "20,000 üzeriyse MUTLAKA hematoloji uzmanına gidin",
+                        "Kan sayımını 1-2 hafta sonra tekrarlayın"
+                    ]
+                },
+                low: {
+                    title: "Düşük Lökosit (Lökopeni)",
+                    testName: "WBC (Lökosit - Akyuvar)",
+                    severity: "critical",
+                    icon: "fa-shield-virus",
+                    criticality: 80,
+                    normalRange: "4,000-11,000 /µL",
+                    symptoms: [
+                        "Sık enfeksiyon geçirme",
+                        "Ateş",
+                        "Ağız yaraları",
+                        "Cilt enfeksiyonları",
+                        "Yorgunluk"
+                    ],
+                    causes: [
+                        "Kemik iliği hastalıkları",
+                        "Viral enfeksiyonlar (HIV, hepatit)",
+                        "Otoimmün hastalıklar (Lupus)",
+                        "Kemoterapi",
+                        "Bazı ilaçlar (antibiyotikler)",
+                        "B12/Folik asit eksikliği"
+                    ],
+                    recommendations: [
+                        "MUTLAKA hematoloji uzmanına gidin",
+                        "Enfeksiyonlardan korunun (hijyen)",
+                        "Kalabalık ortamlardan uzak durun",
+                        "Nedeni bulun (kemik iliği biyopsisi gerekebilir)",
+                        "G-CSF ilaçları (kemik iliğini uyarır)",
+                        "B12/Folik asit takviyesi",
+                        "2000 altıysa ACİL DURUM"
+                    ]
+                }
+            },
+            plt: {
+                high: {
+                    title: "Yüksek Trombosit (Trombositoz)",
+                    testName: "PLT (Trombosit)",
+                    severity: "warning",
+                    icon: "fa-droplet",
+                    criticality: 65,
+                    normalRange: "150,000-400,000 /µL",
+                    symptoms: [
+                        "Baş ağrısı",
+                        "Göğüs ağrısı",
+                        "El-ayaklarda yanma",
+                        "Parmak uçlarında morarma",
+                        "Pıhtılaşma riski"
+                    ],
+                    causes: [
+                        "Demir eksikliği anemisi",
+                        "Kronik enfeksiyon/iltihap",
+                        "Kanser",
+                        "Splenektomi (dalak alınması)",
+                        "Esansiyel trombositemi (miyeloproliferatif hastalık)"
+                    ],
+                    recommendations: [
+                        "Aspirin (kan sulandırıcı)",
+                        "Nedeni bulun ve tedavi edin",
+                        "Demir eksikliği varsa düzeltin",
+                        "1,000,000 üzeriyse MUTLAKA hematoloji uzmanına",
+                        "JAK2 mutasyonu testi",
+                        "Hidroksikarbamid (esansiyel trombositemide)"
+                    ]
+                },
+                low: {
+                    title: "Düşük Trombosit (Trombositopeni)",
+                    testName: "PLT (Trombosit)",
+                    severity: "critical",
+                    icon: "fa-droplet",
+                    criticality: 85,
+                    normalRange: "150,000-400,000 /µL",
+                    symptoms: [
+                        "Kolay morarma",
+                        "Burun kanaması",
+                        "Diş eti kanaması",
+                        "Ciltte kırmızı-mor lekeler (peteşi)",
+                        "Adet kanamasında artış",
+                        "Kanlı idrar veya dışkı"
+                    ],
+                    causes: [
+                        "İmmün trombositopeni (ITP)",
+                        "Kemik iliği hastalıkları",
+                        "Lösemi veya lenfoma",
+                        "Megaloblastik anemi",
+                        "Viral enfeksiyonlar",
+                        "İlaç yan etkileri",
+                        "Dalak büyümesi"
+                    ],
+                    recommendations: [
+                        "MUTLAKA hematoloji uzmanına ACİL gidin",
+                        "Travmadan kaçının",
+                        "Aspirin ve NSAİİ kullanmayın",
+                        "20,000 altıysa kanama riski çok yüksek",
+                        "Kortikosteroid tedavisi (ITP'de)",
+                        "IVIG veya trombosit transfüzyonu gerekebilir",
+                        "10,000 altıysa ACİL SERVİS"
+                    ]
+                }
+            },
+            hba1c: {
+                high: {
+                    title: "Yüksek HbA1c (Diyabet/Prediabetes)",
+                    testName: "HbA1c (Glikozile Hemoglobin)",
+                    severity: "critical",
+                    icon: "fa-chart-line",
+                    criticality: 85,
+                    normalRange: "< 5.7% (Normal), 5.7-6.4% (Prediabetes), ≥ 6.5% (Diyabet)",
+                    symptoms: [
+                        "Aşırı susama",
+                        "Sık idrara çıkma",
+                        "Yorgunluk",
+                        "Bulanık görme",
+                        "Yavaş iyileşen yaralar"
+                    ],
+                    causes: [
+                        "Tip 2 Diyabet",
+                        "Prediabetes",
+                        "İnsülin direnci",
+                        "Sedanter yaşam",
+                        "Obezite"
+                    ],
+                    recommendations: [
+                        "MUTLAKA endokrinoloji uzmanına gidin",
+                        "Karbonhidratları kısıtlayın",
+                        "Düzenli egzersiz (günde 30 dk)",
+                        "Kilo verin (%5-10 bile faydalı)",
+                        "Metformin (ilk tercih ilaç)",
+                        "İnsülin tedavisi (≥9% ise)",
+                        "3 ayda bir HbA1c kontrolü",
+                        "Hedef: <7% (diyabetiklerde)"
+                    ]
+                },
+                low: {
+                    title: "Düşük HbA1c",
+                    testName: "HbA1c (Glikozile Hemoglobin)",
+                    severity: "info",
+                    icon: "fa-chart-line",
+                    criticality: 20,
+                    normalRange: "< 5.7%",
+                    symptoms: [
+                        "Genellikle belirti vermez (olumlu)"
+                    ],
+                    causes: [
+                        "İyi glukoz kontrolü",
+                        "Hemolitik anemi",
+                        "Kanama sonrası"
+                    ],
+                    recommendations: [
+                        "Mükemmel durum",
+                        "Mevcut yaşam tarzınızı sürdürün",
+                        "Çok düşükse (<4%) hematoloji kontrolü"
+                    ]
+                }
+            },
+            ferritin: {
+                high: {
+                    title: "Yüksek Ferritin",
+                    testName: "Ferritin",
+                    severity: "warning",
+                    icon: "fa-magnet",
+                    criticality: 70,
+                    normalRange: "Erkek: 20-250 ng/mL, Kadın: 10-120 ng/mL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Eklem ağrıları",
+                        "Karın ağrısı",
+                        "Ciltte bronzlaşma",
+                        "Kalp ritim bozuklukları"
+                    ],
+                    causes: [
+                        "Hemokromatozis (demir yüklenmesi)",
+                        "Kronik enfeksiyon/iltihap",
+                        "Karaciğer hastalığı",
+                        "Alkol kullanımı",
+                        "Aşırı demir takviyesi"
+                    ],
+                    recommendations: [
+                        "Demir takviyesini DURDURUN",
+                        "Kan verme (flebotomi) - en etkili yöntem",
+                        "Demircileme tedavisi (Deferasirox)",
+                        "C vitamini takviyesi YAPMAYIN",
+                        "Karaciğer fonksiyonlarını kontrol ettirin",
+                        "HFE gen mutasyonu testi (hemokromatozis için)",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Ferritin (Demir Eksikliği)",
+                    testName: "Ferritin",
+                    severity: "warning",
+                    icon: "fa-magnet",
+                    criticality: 65,
+                    normalRange: "Erkek: 20-250 ng/mL, Kadın: 10-120 ng/mL",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Saç dökülmesi",
+                        "Tırnak kırılganlığı",
+                        "Huzursuz bacak sendromu",
+                        "Yutma güçlüğü",
+                        "Anemi belirtileri"
+                    ],
+                    causes: [
+                        "Yetersiz demir alımı",
+                        "Kronik kan kaybı (adet, ülser)",
+                        "Malabsorpsiyon (Crohn, çölyak)",
+                        "Hamilelik",
+                        "Vejetaryen beslenme"
+                    ],
+                    recommendations: [
+                        "Demir takviyesi (Ferrosanol, 100-200 mg/gün)",
+                        "C vitamini ile birlikte alın (emilimi artırır)",
+                        "Kırmızı et, karaciğer tüketin",
+                        "Çay ve kahveyi yemeklerden 1 saat sonra için",
+                        "Kan kaybı kaynağını araştırın (gastroskopi/kolonoskopi)",
+                        "3 ay demir tedavisi sonrası kontrol",
+                        "IV demir tedavisi (ağız yoluyla tolere edilemezse)"
+                    ]
+                }
+            },
+            crp: {
+                high: {
+                    title: "Yüksek CRP (Enfeksiyon/İltihap)",
+                    testName: "CRP (C-Reaktif Protein)",
+                    severity: "critical",
+                    icon: "fa-fire",
+                    criticality: 75,
+                    normalRange: "< 3 mg/L (düşük risk), 3-10 mg/L (orta risk), > 10 mg/L (yüksek risk)",
+                    symptoms: [
+                        "Ateş",
+                        "Yorgunluk",
+                        "Vücut ağrıları",
+                        "Şişlik ve kızarıklık",
+                        "Genel rahatsızlık"
+                    ],
+                    causes: [
+                        "Bakteriyel enfeksiyon",
+                        "Romatizmal hastalıklar",
+                        "Kalp krizi",
+                        "Kronik yangısal bağırsak hastalıkları",
+                        "Kanser",
+                        "Obezite"
+                    ],
+                    recommendations: [
+                        "Enfeksiyon kaynağını bulun",
+                        "Antibiyotik tedavisi (gerekirse)",
+                        "Antiinflamatuvar ilaçlar",
+                        "Kilo verin (obezite varsa)",
+                        "Antioksidan besinler tüketin",
+                        "> 100 mg/L ise ciddi enfeksiyon, ACİL doktora gidin",
+                        "Procalcitonin testi (bakteriyel enfeksiyon ayırımı için)"
+                    ]
+                },
+                low: {
+                    title: "Düşük CRP (Normal/İyi)",
+                    testName: "CRP (C-Reaktif Protein)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "< 3 mg/L",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Sağlıklı durum",
+                        "Enfeksiyon yok",
+                        "Düşük kardiyovasküler risk"
+                    ],
+                    recommendations: [
+                        "Mükemmel durum",
+                        "Sağlıklı yaşam tarzını sürdürün",
+                        "Düzenli egzersiz",
+                        "Dengeli beslenme"
+                    ]
+                }
+            },
+            ast_sgot: {
+                high: {
+                    title: "Yüksek AST (Karaciğer/Kalp Hasarı)",
+                    testName: "AST (SGOT) - Karaciğer Enzimi",
+                    severity: "critical",
+                    icon: "fa-heart-pulse",
+                    criticality: 75,
+                    normalRange: "10-40 U/L",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Karın ağrısı",
+                        "Sarılık",
+                        "Koyu idrar",
+                        "Bulantı"
+                    ],
+                    causes: [
+                        "Karaciğer hastalıkları (hepatit, siroz)",
+                        "Kalp krizi",
+                        "Kas hastalıkları",
+                        "Alkol kullanımı",
+                        "İlaç toksisitesi"
+                    ],
+                    recommendations: [
+                        "Alkol kullanımını durdurun",
+                        "ALT ile birlikte değerlendirin (AST/ALT oranı)",
+                        "Kalp enzimlerini kontrol ettirin",
+                        "Hepatotoksik ilaçlardan kaçının",
+                        "Karaciğer ultrasonografisi",
+                        "MUTLAKA gastroenteroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük AST",
+                    testName: "AST (SGOT) - Karaciğer Enzimi",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 15,
+                    normalRange: "10-40 U/L",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Normal varyasyon",
+                        "B6 vitamini eksikliği"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Dengeli beslenmeye devam edin"
+                    ]
+                }
+            },
+            trigliserit: {
+                high: {
+                    title: "Yüksek Trigliserit",
+                    testName: "Trigliserit",
+                    severity: "warning",
+                    icon: "fa-droplet",
+                    criticality: 70,
+                    normalRange: "< 150 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez",
+                        "Xantomalar (çok yüksekse)",
+                        "Pankreatit (>500 mg/dL)",
+                        "Hepatomegali"
+                    ],
+                    causes: [
+                        "Aşırı karbonhidrat ve şeker tüketimi",
+                        "Alkol kullanımı",
+                        "Obezite",
+                        "Diyabet",
+                        "Hipotiroidi",
+                        "Böbrek hastalığı"
+                    ],
+                    recommendations: [
+                        "Şeker ve rafine karbonhidratları AZALTIN",
+                        "Alkol tüketimini sınırlandırın",
+                        "Omega-3 takviyesi (2-4 g/gün)",
+                        "Kilo verin",
+                        "Düzenli egzersiz",
+                        "Fibrat ilaçları (Fenofibrat)",
+                        ">500 mg/dL ise pankreatit riski, ACİL gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Trigliserit",
+                    testName: "Trigliserit",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 20,
+                    normalRange: "< 150 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez (olumlu)"
+                    ],
+                    causes: [
+                        "Düşük yağlı diyet",
+                        "Malabsorpsiyon",
+                        "Hipertiroidizm"
+                    ],
+                    recommendations: [
+                        "Genellikle sağlıklı",
+                        "Çok düşükse (<35) malabsorpsiyon araştırın",
+                        "Tiroid fonksiyonlarını kontrol ettirin"
+                    ]
+                }
+            },
+            ure: {
+                high: {
+                    title: "Yüksek Üre (Böbrek Sorunu)",
+                    testName: "Üre",
+                    severity: "critical",
+                    icon: "fa-kidneys",
+                    criticality: 80,
+                    normalRange: "10-50 mg/dL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Ağızda metalik tat",
+                        "İştah kaybı",
+                        "Bulantı",
+                        "Ödem (şişlik)"
+                    ],
+                    causes: [
+                        "Böbrek yetmezliği",
+                        "Dehidrasyon",
+                        "Kalp yetmezliği",
+                        "Yüksek protein diyeti",
+                        "Gastrointestinal kanama"
+                    ],
+                    recommendations: [
+                        "BOL SU İÇİN",
+                        "Protein alımını azaltın",
+                        "Tuzu kısıtlayın",
+                        "Kreatinin ile birlikte değerlendirin",
+                        "Böbrek fonksiyon testleri yaptırın",
+                        "MUTLAKA nefroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Üre",
+                    testName: "Üre",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 25,
+                    normalRange: "10-50 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Düşük protein diyeti",
+                        "Aşırı hidrasyon",
+                        "Karaciğer hastalığı",
+                        "Hamilelik"
+                    ],
+                    recommendations: [
+                        "Protein alımını artırın",
+                        "Karaciğer fonksiyonlarını kontrol ettirin",
+                        "Genellikle endişe verici değil"
+                    ]
+                }
+            },
+            uric_acid: {
+                high: {
+                    title: "Yüksek Ürik Asit (Gut Riski)",
+                    testName: "Ürik Asit",
+                    severity: "warning",
+                    icon: "fa-bone",
+                    criticality: 65,
+                    normalRange: "Erkek: 3.4-7.0 mg/dL, Kadın: 2.4-6.0 mg/dL",
+                    symptoms: [
+                        "Eklem ağrısı (özellikle ayak başparmağı)",
+                        "Şişlik ve kızarıklık",
+                        "Hareket kısıtlılığı",
+                        "Böbrek taşı"
+                    ],
+                    causes: [
+                        "Purin açısından zengin besinler (kırmızı et, deniz ürünleri)",
+                        "Alkol (özellikle bira)",
+                        "Fruktoz tüketimi",
+                        "Obezite",
+                        "Böbrek hastalığı",
+                        "Diüretik ilaçlar"
+                    ],
+                    recommendations: [
+                        "Kırmızı et ve iç organları sınırlayın",
+                        "Alkol kullanımını azaltın/bırakın",
+                        "Bol su için (2-3 litre/gün)",
+                        "Kiraz ve kiraz suyu tüketin",
+                        "Kilo verin (yavaş yavaş)",
+                        "Allopurinol veya Febuxostat (gut atakları için)",
+                        "MUTLAKA romatoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Ürik Asit",
+                    testName: "Ürik Asit",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 20,
+                    normalRange: "Erkek: 3.4-7.0 mg/dL, Kadın: 2.4-6.0 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Düşük purin diyeti",
+                        "Wilson hastalığı",
+                        "SIADH",
+                        "Bazı ilaçlar"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Çok düşükse Wilson hastalığı araştırın",
+                        "Dengeli beslenin"
+                    ]
+                }
+            },
+            rbc: {
+                high: {
+                    title: "Yüksek Eritrosit (Polisitemi)",
+                    testName: "RBC (Eritrosit - Alyuvar)",
+                    severity: "warning",
+                    icon: "fa-droplet",
+                    criticality: 70,
+                    normalRange: "Erkek: 4.5-5.9 milyon/µL, Kadın: 4.1-5.1 milyon/µL",
+                    symptoms: [
+                        "Baş ağrısı",
+                        "Baş dönmesi",
+                        "Kızarık yüz",
+                        "Kaşıntı (özellikle sıcak suda)",
+                        "Bulanık görme"
+                    ],
+                    causes: [
+                        "Dehidrasyon",
+                        "Sigara",
+                        "Yüksek irtifada yaşama",
+                        "Akciğer hastalıkları",
+                        "Polisitemia vera",
+                        "Uyku apnesi"
+                    ],
+                    recommendations: [
+                        "Bol su için",
+                        "Sigarayı bırakın",
+                        "Hemoglobin ve hematokrit değerlerine bakın",
+                        "Kan verme (flebotomi)",
+                        "Aspirin (pıhtılaşmayı önlemek için)",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Eritrosit (Anemi)",
+                    testName: "RBC (Eritrosit - Alyuvar)",
+                    severity: "critical",
+                    icon: "fa-droplet",
+                    criticality: 80,
+                    normalRange: "Erkek: 4.5-5.9 milyon/µL, Kadın: 4.1-5.1 milyon/µL",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Solgunluk",
+                        "Nefes darlığı",
+                        "Baş dönmesi",
+                        "Soğuk eller"
+                    ],
+                    causes: [
+                        "Demir eksikliği",
+                        "B12/Folik asit eksikliği",
+                        "Kronik kan kaybı",
+                        "Kemik iliği hastalıkları",
+                        "Kronik hastalıklar"
+                    ],
+                    recommendations: [
+                        "Hemoglobin ve MCV değerlerine bakın",
+                        "Demir takviyesi",
+                        "B12 ve folik asit takviyesi",
+                        "Kan kaybı kaynağını araştırın",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                }
+            },
+            hct: {
+                high: {
+                    title: "Yüksek Hematokrit",
+                    testName: "Hematokrit (HCT)",
+                    severity: "warning",
+                    icon: "fa-flask",
+                    criticality: 65,
+                    normalRange: "Erkek: 38.3-48.6%, Kadın: 35.5-44.9%",
+                    symptoms: [
+                        "Baş ağrısı",
+                        "Yorgunluk",
+                        "Nefes darlığı",
+                        "Bulanık görme"
+                    ],
+                    causes: [
+                        "Dehidrasyon",
+                        "Polisitemia vera",
+                        "Akciğer hastalıkları",
+                        "Kalp hastalığı",
+                        "Sigara"
+                    ],
+                    recommendations: [
+                        "BOL SU İÇİN",
+                        "Sigarayı bırakın",
+                        "Hemoglobin ile birlikte değerlendirin",
+                        "Kan verme gerekebilir",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Hematokrit (Anemi)",
+                    testName: "Hematokrit (HCT)",
+                    severity: "critical",
+                    icon: "fa-flask",
+                    criticality: 75,
+                    normalRange: "Erkek: 38.3-48.6%, Kadın: 35.5-44.9%",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Solgunluk",
+                        "Nefes darlığı",
+                        "Baş dönmesi"
+                    ],
+                    causes: [
+                        "Anemi (demir, B12 eksikliği)",
+                        "Kan kaybı",
+                        "Kemik iliği hastalıkları",
+                        "Kronik hastalıklar"
+                    ],
+                    recommendations: [
+                        "Hemoglobin değerine bakın",
+                        "Demir/B12 takviyesi",
+                        "Kan kaybı kaynağını araştırın",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                }
+            },
+            mcv: {
+                high: {
+                    title: "Yüksek MCV (Makrositik Anemi)",
+                    testName: "MCV (Ortalama Eritrosit Hacmi)",
+                    severity: "warning",
+                    icon: "fa-circle-dot",
+                    criticality: 65,
+                    normalRange: "80-100 fL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Solukluk",
+                        "Dil iltihabı",
+                        "Nörolojik belirtiler (B12 eksikliğinde)"
+                    ],
+                    causes: [
+                        "B12 vitamini eksikliği",
+                        "Folik asit eksikliği",
+                        "Alkol kullanımı",
+                        "Hipotiroidi",
+                        "Karaciğer hastalığı",
+                        "Bazı ilaçlar (Metformin, Metotreksat)"
+                    ],
+                    recommendations: [
+                        "B12 ve folik asit düzeylerini kontrol ettirin",
+                        "B12 takviyesi/iğnesi",
+                        "Folik asit takviyesi (5 mg/gün)",
+                        "Alkol kullanımını azaltın/bırakın",
+                        "Tiroid fonksiyonlarını kontrol ettirin",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük MCV (Mikrositik Anemi)",
+                    testName: "MCV (Ortalama Eritrosit Hacmi)",
+                    severity: "warning",
+                    icon: "fa-circle-dot",
+                    criticality: 70,
+                    normalRange: "80-100 fL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Solukluk",
+                        "Nefes darlığı",
+                        "Saç dökülmesi"
+                    ],
+                    causes: [
+                        "Demir eksikliği anemisi",
+                        "Talasemi",
+                        "Kronik hastalık anemisi",
+                        "Kurşun zehirlenmesi"
+                    ],
+                    recommendations: [
+                        "Demir düzeylerini kontrol ettirin",
+                        "Demir takviyesi (Ferrosanol)",
+                        "Hemoglobin elektroforezi (talasemi şüphesinde)",
+                        "C vitamini ile birlikte demir alın",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                }
+            },
+            albumin: {
+                high: {
+                    title: "Yüksek Albumin",
+                    testName: "Albumin",
+                    severity: "info",
+                    icon: "fa-vial",
+                    criticality: 30,
+                    normalRange: "3.5-5.5 g/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Dehidrasyon",
+                        "Yüksek protein diyeti"
+                    ],
+                    recommendations: [
+                        "Bol su için",
+                        "Genellikle endişe verici değil",
+                        "Dehidrasyon belirtilerini kontrol edin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Albumin (Hipoalbuminemi)",
+                    testName: "Albumin",
+                    severity: "critical",
+                    icon: "fa-vial",
+                    criticality: 75,
+                    normalRange: "3.5-5.5 g/dL",
+                    symptoms: [
+                        "Ödem (şişlik - bacak, ayak, karın)",
+                        "Yorgunluk",
+                        "Sarılık",
+                        "Asit (karında sıvı birikimi)"
+                    ],
+                    causes: [
+                        "Karaciğer hastalığı (siroz)",
+                        "Böbrek hastalığı (nefrotik sendrom)",
+                        "Malnütrisyon",
+                        "Enfeksiyon/İltihap",
+                        "Malabsorpsiyon"
+                    ],
+                    recommendations: [
+                        "Yüksek protein diyeti",
+                        "Karaciğer ve böbrek fonksiyonlarını kontrol ettirin",
+                        "Nedeni bulun ve tedavi edin",
+                        "<2.5 g/dL ise ACİL durum",
+                        "Albümin infüzyonu gerekebilir",
+                        "MUTLAKA gastroenteroloji/nefroloji uzmanına gidin"
+                    ]
+                }
+            },
+            ggt: {
+                high: {
+                    title: "Yüksek GGT (Karaciğer/Safra Yolu Sorunu)",
+                    testName: "GGT (Gamma GT)",
+                    severity: "warning",
+                    icon: "fa-liver",
+                    criticality: 70,
+                    normalRange: "0-51 U/L (erkek), 0-35 U/L (kadın)",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Karın ağrısı",
+                        "Sarılık",
+                        "Koyu idrar",
+                        "Açık renkli dışkı"
+                    ],
+                    causes: [
+                        "Alkol kullanımı (en yaygın)",
+                        "Yağlı karaciğer",
+                        "Safra yolu tıkanıklığı",
+                        "Hepatit",
+                        "Pankreas hastalıkları",
+                        "Bazı ilaçlar"
+                    ],
+                    recommendations: [
+                        "ALKOL KULLANMAYIN",
+                        "Kilo verin (yağlı karaciğer için)",
+                        "ALT ve AST ile birlikte değerlendirin",
+                        "Karaciğer ultrasonografisi",
+                        "Hepatit testleri",
+                        "MUTLAKA gastroenteroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük GGT",
+                    testName: "GGT (Gamma GT)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "0-51 U/L (erkek), 0-35 U/L (kadın)",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Normal/sağlıklı durum"
+                    ],
+                    recommendations: [
+                        "Mükemmel",
+                        "Sağlıklı yaşam tarzını sürdürün"
+                    ]
+                }
+            },
+            potasyum: {
+                high: {
+                    title: "Yüksek Potasyum (Hiperkalemi)",
+                    testName: "Potasyum (K)",
+                    severity: "critical",
+                    icon: "fa-bolt",
+                    criticality: 90,
+                    normalRange: "3.5-5.0 mEq/L",
+                    symptoms: [
+                        "Kalp ritim bozuklukları (ARİTMİ)",
+                        "Kas zayıflığı",
+                        "Karıncalanma",
+                        "Bulantı",
+                        "Yavaş nabız"
+                    ],
+                    causes: [
+                        "Böbrek yetmezliği",
+                        "ACE inhibitörleri ve ARB ilaçları",
+                        "Potasyum koruyucu diüretikler (Spironolakton)",
+                        "Aşırı potasyum alımı",
+                        "Addison hastalığı",
+                        "Hücre yıkımı (travma, yanık)"
+                    ],
+                    recommendations: [
+                        ">6.0 mEq/L ise YAŞAMSAL TEHLİKE - ACİL SERVİS",
+                        "Potasyum içeren besinleri AZALTIN (muz, portakal, domates)",
+                        "İlaçlarınızı gözden geçirin",
+                        "Kalsiyum glukonat IV (kalbi korur)",
+                        "İnsülin + glukoz tedavisi",
+                        "Diyaliz gerekebilir",
+                        "MUTLAKA ACİL nefroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Potasyum (Hipokalemi)",
+                    testName: "Potasyum (K)",
+                    severity: "critical",
+                    icon: "fa-bolt",
+                    criticality: 85,
+                    normalRange: "3.5-5.0 mEq/L",
+                    symptoms: [
+                        "Kas zayıflığı ve kramplar",
+                        "Yorgunluk",
+                        "Kalp çarpıntısı",
+                        "Kabızlık",
+                        "Kas felci (çok düşükse)"
+                    ],
+                    causes: [
+                        "Diüretik ilaçlar (Furosemid)",
+                        "Kusma ve ishal",
+                        "Aşırı terleme",
+                        "Yetersiz alım",
+                        "Hiperaldosteronizm"
+                    ],
+                    recommendations: [
+                        "<2.5 mEq/L ise ACİL SERVİS",
+                        "Potasyum açısından zengin besinler (muz, portakal, patates)",
+                        "Potasyum takviyesi (Slow-K)",
+                        "IV potasyum (çok düşükse)",
+                        "Magnezyum düzeyini de kontrol ettirin",
+                        "Diüretik dozunu ayarlayın",
+                        "MUTLAKA kardiyoloji uzmanına gidin"
+                    ]
+                }
+            },
+            sodyum: {
+                high: {
+                    title: "Yüksek Sodyum (Hipernatremi)",
+                    testName: "Sodyum (Na)",
+                    severity: "critical",
+                    icon: "fa-salt-shaker",
+                    criticality: 85,
+                    normalRange: "135-145 mEq/L",
+                    symptoms: [
+                        "Aşırı susama",
+                        "Konfüzyon ve bilinç bulanıklığı",
+                        "Kas seğirmeleri",
+                        "Nöbet",
+                        "Koma (çok yüksekse)"
+                    ],
+                    causes: [
+                        "Dehidrasyon (yetersiz su alımı)",
+                        "Aşırı su kaybı (ishal, kusma, yanık)",
+                        "Diabetes insipidus",
+                        "Aşırı tuz alımı",
+                        "Hiperaldosteronizm"
+                    ],
+                    recommendations: [
+                        ">160 mEq/L ise YAŞAMSAL TEHLİKE - ACİL SERVİS",
+                        "Yavaş yavaş su verin (hızla düşürmeyin)",
+                        "Tuzu azaltın",
+                        "Nedeni bulun",
+                        "Hipotonik sıvı infüzyonu",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Sodyum (Hiponatremi)",
+                    testName: "Sodyum (Na)",
+                    severity: "critical",
+                    icon: "fa-salt-shaker",
+                    criticality: 85,
+                    normalRange: "135-145 mEq/L",
+                    symptoms: [
+                        "Baş ağrısı",
+                        "Bulantı ve kusma",
+                        "Kas zayıflığı",
+                        "Konfüzyon",
+                        "Nöbet ve koma (çok düşükse)"
+                    ],
+                    causes: [
+                        "Aşırı su içme",
+                        "SIADH (uygunsuz ADH salgısı)",
+                        "Kalp yetmezliği",
+                        "Böbrek hastalığı",
+                        "Diüretik ilaçlar",
+                        "Hipotiroidi"
+                    ],
+                    recommendations: [
+                        "<125 mEq/L ise ACİL SERVİS",
+                        "Su alımını kısıtlayın",
+                        "Tuzlu besinler tüketin",
+                        "Hipertonik salin infüzyonu (çok düşükse)",
+                        "Nedeni bulun (tiroid, böbrek kontrolü)",
+                        "MUTLAKA endokrinoloji/nefroloji uzmanına gidin"
+                    ]
+                }
+            },
+            kalsiyum: {
+                high: {
+                    title: "Yüksek Kalsiyum (Hiperkalsemi)",
+                    testName: "Kalsiyum (Ca)",
+                    severity: "critical",
+                    icon: "fa-bone",
+                    criticality: 80,
+                    normalRange: "8.5-10.5 mg/dL",
+                    symptoms: [
+                        "Aşırı susama ve idrara çıkma",
+                        "Kemik ağrısı",
+                        "Bulantı ve kusma",
+                        "Konstipasyon",
+                        "Konfüzyon",
+                        "Böbrek taşı"
+                    ],
+                    causes: [
+                        "Hiperparatiroidizm",
+                        "Kanser (kemik metastazı)",
+                        "Aşırı D vitamini",
+                        "Tiazid diüretikler",
+                        "Sarkoidoz",
+                        "Uzun süre yatağa bağlı kalma"
+                    ],
+                    recommendations: [
+                        ">14 mg/dL ise YAŞAMSAL TEHLİKE - ACİL SERVİS",
+                        "BOL SU İÇİN",
+                        "D vitamini takviyesini durdurun",
+                        "PTH (paratiroid hormon) testi",
+                        "Bifosfonat tedavisi",
+                        "Calcitonin",
+                        "Paratiroid ameliyatı gerekebilir",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Kalsiyum (Hipokalsemi)",
+                    testName: "Kalsiyum (Ca)",
+                    severity: "critical",
+                    icon: "fa-bone",
+                    criticality: 80,
+                    normalRange: "8.5-10.5 mg/dL",
+                    symptoms: [
+                        "Kas krampları ve spazmlar",
+                        "Karıncalanma (dudak, parmak)",
+                        "Tetani (kas kasılması)",
+                        "Nöbet",
+                        "Kalp ritim bozuklukları"
+                    ],
+                    causes: [
+                        "D vitamini eksikliği",
+                        "Hipoparatiroidizm",
+                        "Böbrek yetmezliği",
+                        "Magnezyum eksikliği",
+                        "Pankreatit",
+                        "Malabsorpsiyon"
+                    ],
+                    recommendations: [
+                        "<7.0 mg/dL ise ACİL SERVİS",
+                        "Kalsiyum takviyesi (Kalsiyum karbonat 1000-1500 mg/gün)",
+                        "D vitamini takviyesi (birlikte alın)",
+                        "IV kalsiyum glukonat (çok düşükse)",
+                        "Magnezyum düzeyini kontrol ettirin",
+                        "PTH testi",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                }
+            },
+            magnezyum: {
+                high: {
+                    title: "Yüksek Magnezyum (Hipermagnesemi)",
+                    testName: "Magnezyum (Mg)",
+                    severity: "warning",
+                    icon: "fa-magnet",
+                    criticality: 70,
+                    normalRange: "1.7-2.2 mg/dL",
+                    symptoms: [
+                        "Bulantı",
+                        "Kas zayıflığı",
+                        "Hipotansiyon",
+                        "Bradikardi (yavaş nabız)",
+                        "Solunum depresyonu (çok yüksekse)"
+                    ],
+                    causes: [
+                        "Böbrek yetmezliği",
+                        "Aşırı magnezyum takviyesi",
+                        "Magnezyum içeren antiasitler",
+                        "Addison hastalığı"
+                    ],
+                    recommendations: [
+                        ">4 mg/dL ise ACİL SERVİS",
+                        "Magnezyum takviyesini durdurun",
+                        "Magnezyum içeren ilaçları bırakın",
+                        "IV kalsiyum glukonat (antidot)",
+                        "Diyaliz gerekebilir",
+                        "MUTLAKA nefroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Magnezyum (Hipomagnesemi)",
+                    testName: "Magnezyum (Mg)",
+                    severity: "warning",
+                    icon: "fa-magnet",
+                    criticality: 70,
+                    normalRange: "1.7-2.2 mg/dL",
+                    symptoms: [
+                        "Kas krampları",
+                        "Titreme",
+                        "Nöbet",
+                        "Kalp ritim bozuklukları",
+                        "Yorgunluk"
+                    ],
+                    causes: [
+                        "Yetersiz alım",
+                        "Kronik ishal",
+                        "Alkol kullanımı",
+                        "Diüretik ilaçlar",
+                        "Diyabet",
+                        "Proton pompa inhibitörleri"
+                    ],
+                    recommendations: [
+                        "Magnezyum takviyesi (Magnezyum sitrat 200-400 mg/gün)",
+                        "Magnezyum açısından zengin besinler (fındık, tohum, yeşil yapraklı sebze)",
+                        "IV magnezyum sülfat (ciddi eksiklikte)",
+                        "Potasyum ve kalsiyum düzeylerini de kontrol ettirin",
+                        "MUTLAKA kardiyoloji uzmanına gidin"
+                    ]
+                }
+            },
+            sedimentasyon: {
+                high: {
+                    title: "Yüksek Sedimentasyon (İltihap)",
+                    testName: "Sedimentasyon (ESR)",
+                    severity: "warning",
+                    icon: "fa-fire-flame-curved",
+                    criticality: 65,
+                    normalRange: "Erkek: 0-15 mm/saat, Kadın: 0-20 mm/saat",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Ateş",
+                        "Eklem ağrıları",
+                        "Kilo kaybı",
+                        "Gece terlemeleri"
+                    ],
+                    causes: [
+                        "Enfeksiyon",
+                        "Romatizmal hastalıklar (RA, Lupus)",
+                        "Kanser",
+                        "Kronik böbrek hastalığı",
+                        "Tiroid hastalıkları",
+                        "Anemi"
+                    ],
+                    recommendations: [
+                        "CRP testi ile birlikte değerlendirin",
+                        "Enfeksiyon kaynağını araştırın",
+                        "Romatolojik testler (RF, ANA)",
+                        ">100 mm/saat ise ciddi durum",
+                        "Nedeni bulun ve tedavi edin",
+                        "MUTLAKA dahiliye uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Sedimentasyon",
+                    testName: "Sedimentasyon (ESR)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "Erkek: 0-15 mm/saat, Kadın: 0-20 mm/saat",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Normal/sağlıklı durum",
+                        "Polisitemi",
+                        "Konjestif kalp yetmezliği"
+                    ],
+                    recommendations: [
+                        "Genellikle iyi bir bulgu",
+                        "Düşük iltihap düzeyi"
+                    ]
+                }
+            },
+            basofil: {
+                high: {
+                    title: "Yüksek Basofil",
+                    testName: "Basofil",
+                    severity: "warning",
+                    icon: "fa-virus",
+                    criticality: 60,
+                    normalRange: "0-1% veya 0-100 /µL",
+                    symptoms: [
+                        "Alerjik reaksiyon belirtileri",
+                        "Kaşıntı",
+                        "Yorgunluk",
+                        "Ateş (enfeksiyonda)"
+                    ],
+                    causes: [
+                        "Kronik miyeloid lösemi (KML)",
+                        "Polisitemia vera",
+                        "Hipotiroidizm",
+                        "Ülseratif kolit",
+                        "Alerjik reaksiyonlar",
+                        "Viral enfeksiyonlar"
+                    ],
+                    recommendations: [
+                        "MUTLAKA hematoloji uzmanına gidin",
+                        "Kemik iliği biyopsisi gerekebilir",
+                        "Tiroid fonksiyonlarını kontrol ettirin",
+                        "Alerjik durumlar için antihistaminik",
+                        "Nedeni bulun ve tedavi edin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Basofil",
+                    testName: "Basofil",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 15,
+                    normalRange: "0-1% veya 0-100 /µL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Akut enfeksiyon",
+                        "Stres",
+                        "Hipertiroidizm",
+                        "Normal varyasyon"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Tekrarlayan düşüklükte tiroid kontrolü",
+                        "Genel sağlık kontrolü"
+                    ]
+                }
+            },
+            bilirubin_direkt: {
+                high: {
+                    title: "Yüksek Direkt Bilirubin (Safra Yolu Tıkanıklığı)",
+                    testName: "Bilirubin (Direkt)",
+                    severity: "critical",
+                    icon: "fa-liver",
+                    criticality: 80,
+                    normalRange: "0-0.3 mg/dL",
+                    symptoms: [
+                        "Sarılık (ikter)",
+                        "Koyu idrar (çay rengi)",
+                        "Açık renkli dışkı",
+                        "Kaşıntı",
+                        "Sağ üst karın ağrısı"
+                    ],
+                    causes: [
+                        "Safra taşı",
+                        "Pankreas kanseri",
+                        "Safra yolu tıkanıklığı",
+                        "Karaciğer sirozu",
+                        "Viral hepatit",
+                        "İlaç yan etkileri"
+                    ],
+                    recommendations: [
+                        "MUTLAKA gastroenteroloji uzmanına ACİL gidin",
+                        "Karın ultrasonografisi veya MRCP",
+                        "Karaciğer fonksiyon testleri",
+                        "ERCP gerekebilir (safra taşı varsa)",
+                        "Ursodeoxycholic asit (safra taşı için)",
+                        "Ameliyat gerekebilir"
+                    ]
+                },
+                low: {
+                    title: "Düşük Direkt Bilirubin",
+                    testName: "Bilirubin (Direkt)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "0-0.3 mg/dL",
+                    symptoms: [
+                        "Belirti vermez (normal durum)"
+                    ],
+                    causes: [
+                        "Normal sağlıklı durum"
+                    ],
+                    recommendations: [
+                        "Mükemmel",
+                        "Sağlıklı karaciğer fonksiyonu"
+                    ]
+                }
+            },
+            bilirubin_total: {
+                high: {
+                    title: "Yüksek Total Bilirubin (Sarılık)",
+                    testName: "Bilirubin (Total)",
+                    severity: "critical",
+                    icon: "fa-liver",
+                    criticality: 75,
+                    normalRange: "0.3-1.2 mg/dL",
+                    symptoms: [
+                        "Sarılık (göz ve cilt)",
+                        "Koyu idrar",
+                        "Yorgunluk",
+                        "Karın ağrısı",
+                        "Bulantı"
+                    ],
+                    causes: [
+                        "Hemolitik anemi (alyuvar yıkımı)",
+                        "Gilbert sendromu (iyi huylu)",
+                        "Hepatit (A, B, C)",
+                        "Karaciğer sirozu",
+                        "Safra yolu tıkanıklığı",
+                        "İlaç toksisitesi"
+                    ],
+                    recommendations: [
+                        "Direkt ve indirekt bilirubin ayırımı yapın",
+                        "Karaciğer fonksiyon testleri",
+                        "Hematoloji konsültasyonu (hemoliz varsa)",
+                        ">3 mg/dL ise MUTLAKA gastroenteroloji uzmanına",
+                        "Karın ultrasonografisi",
+                        "Gilbert sendromu ise tedavi gerekmez"
+                    ]
+                },
+                low: {
+                    title: "Düşük Total Bilirubin",
+                    testName: "Bilirubin (Total)",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "0.3-1.2 mg/dL",
+                    symptoms: [
+                        "Belirti vermez"
+                    ],
+                    causes: [
+                        "Normal varyasyon",
+                        "Bazı ilaçlar"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Normal durum"
+                    ]
+                }
+            },
+            bun: {
+                high: {
+                    title: "Yüksek BUN (Böbrek Sorunu)",
+                    testName: "BUN (Kan Üre Azotu)",
+                    severity: "critical",
+                    icon: "fa-kidneys",
+                    criticality: 80,
+                    normalRange: "7-20 mg/dL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Bulantı ve kusma",
+                        "Ağızda kötü tat",
+                        "İştah kaybı",
+                        "Nefes darlığı",
+                        "Konfüzyon (çok yüksekse)"
+                    ],
+                    causes: [
+                        "Böbrek yetmezliği",
+                        "Dehidrasyon",
+                        "Kalp yetmezliği",
+                        "Gastrointestinal kanama",
+                        "Yüksek protein diyeti",
+                        "Bazı ilaçlar (steroidler)"
+                    ],
+                    recommendations: [
+                        "BOL SU İÇİN (2-3 litre/gün)",
+                        "Protein alımını azaltın",
+                        "Kreatinin ile birlikte değerlendirin (BUN/Kreatinin oranı)",
+                        "Böbrek fonksiyon testleri",
+                        ">100 mg/dL ise ACİL SERVİS",
+                        "MUTLAKA nefroloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük BUN",
+                    testName: "BUN (Kan Üre Azotu)",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 20,
+                    normalRange: "7-20 mg/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Düşük protein diyeti",
+                        "Aşırı hidrasyon",
+                        "Karaciğer hastalığı",
+                        "Hamilelik"
+                    ],
+                    recommendations: [
+                        "Protein alımını artırın",
+                        "Karaciğer fonksiyonlarını kontrol ettirin",
+                        "Genellikle endişe verici değil"
+                    ]
+                }
+            },
+            demir: {
+                high: {
+                    title: "Yüksek Demir (Hemokromatozis Riski)",
+                    testName: "Demir (Fe)",
+                    severity: "warning",
+                    icon: "fa-magnet",
+                    criticality: 70,
+                    normalRange: "Erkek: 65-175 mcg/dL, Kadın: 50-170 mcg/dL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Eklem ağrıları",
+                        "Karın ağrısı",
+                        "Ciltte bronzlaşma",
+                        "Libido kaybı",
+                        "Kalp problemleri"
+                    ],
+                    causes: [
+                        "Hemokromatozis (genetik demir yüklenmesi)",
+                        "Aşırı demir takviyesi",
+                        "Sık kan transfüzyonu",
+                        "Kronik karaciğer hastalığı",
+                        "Hemolitik anemi"
+                    ],
+                    recommendations: [
+                        "Demir takviyesini DURDURUN",
+                        "Ferritin ve TIBC testleri yaptırın",
+                        "Kan verme (flebotomi) tedavisi",
+                        "HFE gen testi (hemokromatozis için)",
+                        "C vitamini takviyesi YAPMAYIN",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Demir (Demir Eksikliği Anemisi)",
+                    testName: "Demir (Fe)",
+                    severity: "warning",
+                    icon: "fa-magnet",
+                    criticality: 70,
+                    normalRange: "Erkek: 65-175 mcg/dL, Kadın: 50-170 mcg/dL",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Soluk cilt",
+                        "Saç dökülmesi",
+                        "Tırnak kırılganlığı",
+                        "Nefes darlığı",
+                        "Baş dönmesi"
+                    ],
+                    causes: [
+                        "Yetersiz demir alımı",
+                        "Kronik kan kaybı (adet, ülser)",
+                        "Hamilelik ve emzirme",
+                        "Vejetaryen/vegan beslenme",
+                        "Malabsorpsiyon (Crohn, çölyak)"
+                    ],
+                    recommendations: [
+                        "Demir takviyesi (Ferrosanol 100-200 mg/gün)",
+                        "C vitamini ile birlikte alın",
+                        "Kırmızı et, karaciğer, ıspanak tüketin",
+                        "Çay/kahveyi yemekten 1 saat sonra için",
+                        "Ferritin düzeyini de kontrol ettirin",
+                        "Kan kaybı kaynağını araştırın"
+                    ]
+                }
+            },
+            eozinofil: {
+                high: {
+                    title: "Yüksek Eozinofil (Eozinofilili)",
+                    testName: "Eozinofil",
+                    severity: "warning",
+                    icon: "fa-allergies",
+                    criticality: 65,
+                    normalRange: "0-6% veya 0-500 /µL",
+                    symptoms: [
+                        "Alerjik belirtiler",
+                        "Astım alevlenmeleri",
+                        "Cilt döküntüleri",
+                        "Öksürük",
+                        "Nefes darlığı"
+                    ],
+                    causes: [
+                        "Alerjik hastalıklar (astım, nezle)",
+                        "Parazit enfeksiyonları",
+                        "İlaç alerjisi",
+                        "Eozinofilik granülomatoz (Churg-Strauss)",
+                        "Hodgkin lenfoma",
+                        "Hipereozinofilik sendrom"
+                    ],
+                    recommendations: [
+                        "Alerji testleri yaptırın",
+                        "Gaita parazit incelemesi",
+                        "Antihistaminikler",
+                        "İnhaler kortikosteroidler (astımda)",
+                        ">1500/µL ise MUTLAKA hematoloji uzmanına",
+                        "Organ hasarı riski araştırın"
+                    ]
+                },
+                low: {
+                    title: "Düşük Eozinofil",
+                    testName: "Eozinofil",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 15,
+                    normalRange: "0-6% veya 0-500 /µL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Akut stres",
+                        "Kortikosteroid kullanımı",
+                        "Akut enfeksiyon",
+                        "Cushing sendromu"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Steroid kullanımını gözden geçirin",
+                        "Normal varyasyon olabilir"
+                    ]
+                }
+            },
+            folik_asit: {
+                high: {
+                    title: "Yüksek Folik Asit",
+                    testName: "Folik Asit",
+                    severity: "info",
+                    icon: "fa-leaf",
+                    criticality: 25,
+                    normalRange: "2.7-17.0 ng/mL",
+                    symptoms: [
+                        "Genellikle zararsız",
+                        "B12 eksikliğini maskeleyebilir"
+                    ],
+                    causes: [
+                        "Aşırı folik asit takviyesi",
+                        "Folik asit zenginleştirilmiş besinler"
+                    ],
+                    recommendations: [
+                        "Folik asit takviyesini azaltın",
+                        "B12 düzeyinizi kontrol ettirin (önemli!)",
+                        "Genellikle zararsız",
+                        "Hamilelikte yüksek doz güvenlidir"
+                    ]
+                },
+                low: {
+                    title: "Düşük Folik Asit (Megaloblastik Anemi)",
+                    testName: "Folik Asit",
+                    severity: "critical",
+                    icon: "fa-leaf",
+                    criticality: 75,
+                    normalRange: "2.7-17.0 ng/mL",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Dil iltihabı (kırmızı, ağrılı dil)",
+                        "Ağız yaraları",
+                        "Nöropati (daha az B12'ye göre)",
+                        "Anemi belirtileri",
+                        "Hamilelikte: nöral tüp defekti riski"
+                    ],
+                    causes: [
+                        "Yetersiz alım (sebze-meyve eksikliği)",
+                        "Alkol kullanımı",
+                        "Malabsorpsiyon (Crohn, çölyak)",
+                        "Hamilelik ve emzirme",
+                        "Bazı ilaçlar (Metotreksat, antiepileptikler)",
+                        "Diyaliz"
+                    ],
+                    recommendations: [
+                        "Folik asit takviyesi (5 mg/gün)",
+                        "Yeşil yapraklı sebzeler, baklagiller tüketin",
+                        "Portakal, avokado, brokoli",
+                        "Alkol kullanımını azaltın",
+                        "HAMİLE KADINLAR: MUTLAKA takviye alın (nöral tüp defekti önlemi)",
+                        "B12 eksikliğini de kontrol ettirin"
+                    ]
+                }
+            },
+            ige: {
+                high: {
+                    title: "Yüksek IgE (Alerjik Durum)",
+                    testName: "IgE (İmmünoglobulin E)",
+                    severity: "warning",
+                    icon: "fa-allergies",
+                    criticality: 60,
+                    normalRange: "0-100 IU/mL (yaşa göre değişir)",
+                    symptoms: [
+                        "Alerjik reaksiyonlar",
+                        "Astım",
+                        "Alerjik rinit",
+                        "Egzama (atopik dermatit)",
+                        "Ürtiker (kurdeşen)"
+                    ],
+                    causes: [
+                        "Atopik hastalıklar (astım, alerjik rinit)",
+                        "Parazit enfeksiyonları",
+                        "İlaç alerjisi",
+                        "Besin alerjisi",
+                        "Hiperimmünoglobulin E sendromu",
+                        "Alerjik bronkopulmoner aspergillozis"
+                    ],
+                    recommendations: [
+                        "Spesifik IgE testleri (allerjen paneli)",
+                        "Cilt prick testleri",
+                        "Antihistaminikler",
+                        "Allerjenlerden kaçının",
+                        "İmmünoterapi (alerji aşısı) düşünülebilir",
+                        "Astım varsa inhaler tedavi",
+                        "MUTLAKA alerji-immünoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük IgE",
+                    testName: "IgE (İmmünoglobulin E)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 15,
+                    normalRange: "0-100 IU/mL",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Normal/sağlıklı durum",
+                        "Düşük alerjik eğilim"
+                    ],
+                    recommendations: [
+                        "Mükemmel",
+                        "Düşük alerji riski",
+                        "Sağlıklı bağışıklık sistemi"
+                    ]
+                }
+            },
+            inr: {
+                high: {
+                    title: "Yüksek INR (Kanama Riski)",
+                    testName: "INR (Kan Pıhtılaşma)",
+                    severity: "critical",
+                    icon: "fa-droplet",
+                    criticality: 85,
+                    normalRange: "0.8-1.2 (normal), 2-3 (warfarin tedavisinde)",
+                    symptoms: [
+                        "Kolay morarma",
+                        "Burun kanaması",
+                        "Diş eti kanaması",
+                        "Kanlı idrar",
+                        "Kanlı dışkı",
+                        "İç kanama riski"
+                    ],
+                    causes: [
+                        "Aşırı warfarin dozu",
+                        "Karaciğer hastalığı (K vitamini sentezi azalır)",
+                        "K vitamini eksikliği",
+                        "Antibiyotik kullanımı (warfarin etkisini artırır)",
+                        "DIC (yaygın damar içi pıhtılaşma)"
+                    ],
+                    recommendations: [
+                        ">5.0 ise YAŞAMSAL TEHLİKE - ACİL SERVİS",
+                        "Warfarin dozunu AZALTIN veya DURDURUN",
+                        "K vitamini (fitomenadion) verilebilir",
+                        "Taze donmuş plazma (FFP) gerekebilir",
+                        "İlaç etkileşimlerini kontrol edin",
+                        "Travmadan kaçının",
+                        "MUTLAKA kardiyoloji/hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük INR (Pıhtılaşma Riski)",
+                    testName: "INR (Kan Pıhtılaşma)",
+                    severity: "warning",
+                    icon: "fa-droplet",
+                    criticality: 70,
+                    normalRange: "0.8-1.2 (normal), 2-3 (warfarin tedavisinde)",
+                    symptoms: [
+                        "Warfarin alıyorsanız: tromboz riski",
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Yetersiz warfarin dozu",
+                        "K vitamini alımı (yeşil yapraklı sebzeler)",
+                        "İlaç etkileşimi",
+                        "Genetik faktörler"
+                    ],
+                    recommendations: [
+                        "Warfarin kullanıyorsanız dozu ARTIRIN (doktor kontrolünde)",
+                        "K vitamini içeren besinleri dengeleyin",
+                        "İlaç etkileşimlerini kontrol edin",
+                        "Düzenli INR takibi (haftada 1-2 kez)",
+                        "Tromboz riski varsa MUTLAKA kardiyoloji uzmanına"
+                    ]
+                }
+            },
+            kalp_enzimleri: {
+                high: {
+                    title: "Yüksek Troponin (KALP KRİZİ!)",
+                    testName: "Kalp Enzimleri (Troponin)",
+                    severity: "critical",
+                    icon: "fa-heart-pulse",
+                    criticality: 100,
+                    normalRange: "< 0.04 ng/mL (troponin)",
+                    symptoms: [
+                        "Göğüs ağrısı (sıkıştırıcı, kola yayılan)",
+                        "Nefes darlığı",
+                        "Aşırı terleme",
+                        "Bulantı ve kusma",
+                        "Baş dönmesi",
+                        "Çene/boyun/sırt ağrısı"
+                    ],
+                    causes: [
+                        "Miyokard enfarktüsü (KALP KRİZİ)",
+                        "Angina pektoris",
+                        "Miyokardit",
+                        "Kalp yetmezliği",
+                        "Pulmoner emboli",
+                        "Böbrek yetmezliği (hafif yükselme)"
+                    ],
+                    recommendations: [
+                        "🚨 ACİL SERVİSE HEMEN GİDİN - 112 ARAYIN 🚨",
+                        "Aspirin 300 mg çiğneyerek yutun",
+                        "Nitrat tablet (dil altı)",
+                        "EKG çekilmeli",
+                        "Koroner anjiyografi gerekebilir",
+                        "Stent veya baypas ameliyatı",
+                        "ZAMAN ÖNEMLİ - İLK 90 DAKİKA KRİTİK!"
+                    ]
+                },
+                low: {
+                    title: "Düşük/Normal Troponin",
+                    testName: "Kalp Enzimleri (Troponin)",
+                    severity: "low",
+                    icon: "fa-heart",
+                    criticality: 10,
+                    normalRange: "< 0.04 ng/mL",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Normal/sağlıklı durum",
+                        "Kalp krizi yok"
+                    ],
+                    recommendations: [
+                        "Mükemmel",
+                        "Kalp kasında hasar yok",
+                        "Sağlıklı kalp fonksiyonu"
+                    ]
+                }
+            },
+            ldh: {
+                high: {
+                    title: "Yüksek LDH (Hücre Hasarı)",
+                    testName: "LDH (Laktat Dehidrogenaz)",
+                    severity: "warning",
+                    icon: "fa-dna",
+                    criticality: 70,
+                    normalRange: "140-280 U/L",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Nefes darlığı",
+                        "Sarılık (hemolizde)",
+                        "Karın ağrısı"
+                    ],
+                    causes: [
+                        "Hemolitik anemi (alyuvar yıkımı)",
+                        "Kalp krizi",
+                        "Karaciğer hastalığı",
+                        "Böbrek hastalığı",
+                        "Lenfoma ve lösemi",
+                        "Pulmoner emboli",
+                        "Kas hastalıkları"
+                    ],
+                    recommendations: [
+                        "Hemoglobin ve haptoglobin kontrolü",
+                        "Karaciğer ve böbrek fonksiyon testleri",
+                        "Kalp enzimleri (troponin)",
+                        ">1000 U/L ise ciddi durum",
+                        "LDH izoenzim analizi yapılabilir",
+                        "MUTLAKA hematoloji/onkoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük LDH",
+                    testName: "LDH (Laktat Dehidrogenaz)",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 15,
+                    normalRange: "140-280 U/L",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Normal varyasyon",
+                        "Yüksek doz C vitamini alımı"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Normal durum"
+                    ]
+                }
+            },
+            lenfosit: {
+                high: {
+                    title: "Yüksek Lenfosit (Lenfositoz)",
+                    testName: "Lenfosit",
+                    severity: "warning",
+                    icon: "fa-virus",
+                    criticality: 65,
+                    normalRange: "20-40% veya 1000-4000 /µL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Ateş",
+                        "Lenf bezi büyümesi",
+                        "Dalak büyümesi",
+                        "Gece terlemeleri"
+                    ],
+                    causes: [
+                        "Viral enfeksiyonlar (EBV, CMV, HIV)",
+                        "Tüberküloz",
+                        "Kronik lenfositik lösemi (KLL)",
+                        "Lenfoma",
+                        "Pertussis (boğmaca)",
+                        "Tirotoksikoz"
+                    ],
+                    recommendations: [
+                        "Viral testler (EBV, CMV, HIV)",
+                        "Periferik yayma incelemesi",
+                        ">10,000/µL veya >6 ay süre ise MUTLAKA hematoloji uzmanına",
+                        "Kemik iliği biyopsisi gerekebilir",
+                        "Flow sitometri (lösemi/lenfoma ayırımı)",
+                        "Enfeksiyon tedavisi"
+                    ]
+                },
+                low: {
+                    title: "Düşük Lenfosit (Lenfopeni)",
+                    testName: "Lenfosit",
+                    severity: "critical",
+                    icon: "fa-virus",
+                    criticality: 80,
+                    normalRange: "20-40% veya 1000-4000 /µL",
+                    symptoms: [
+                        "Sık enfeksiyon geçirme",
+                        "Uzun süren hastalıklar",
+                        "Ağız mantar enfeksiyonları",
+                        "Cilt enfeksiyonları"
+                    ],
+                    causes: [
+                        "HIV/AIDS",
+                        "Otoimmün hastalıklar (Lupus)",
+                        "Kemoterapi",
+                        "Radyasyon tedavisi",
+                        "Kortikosteroid kullanımı",
+                        "Aplastik anemi",
+                        "Hodgkin lenfoma"
+                    ],
+                    recommendations: [
+                        "<500/µL ise MUTLAKA hematoloji/immünoloji uzmanına",
+                        "HIV testi",
+                        "Otoimmün testler (ANA, anti-DNA)",
+                        "Kemik iliği biyopsisi gerekebilir",
+                        "Enfeksiyonlardan korunun (hijyen, maske)",
+                        "G-CSF tedavisi gerekebilir",
+                        "Antiviral/antibiyotik profilaksisi"
+                    ]
+                }
+            },
+            lipaz: {
+                high: {
+                    title: "Yüksek Lipaz (Pankreatit)",
+                    testName: "Lipaz",
+                    severity: "critical",
+                    icon: "fa-stomach",
+                    criticality: 85,
+                    normalRange: "0-160 U/L",
+                    symptoms: [
+                        "Şiddetli karın ağrısı (üst orta, sırta yayılan)",
+                        "Bulantı ve kusma",
+                        "Ateş",
+                        "Karında hassasiyet",
+                        "Sırta uzanan ağrı"
+                    ],
+                    causes: [
+                        "Akut pankreatit",
+                        "Safra taşı",
+                        "Alkol kullanımı",
+                        "Hipertrigliseridemi (>1000 mg/dL)",
+                        "ERCP sonrası",
+                        "Pankreas kanseri",
+                        "Bazı ilaçlar"
+                    ],
+                    recommendations: [
+                        ">3 kat normalin üstüyse ACİL SERVİS (akut pankreatit)",
+                        "AĞIZDAN HİÇBİR ŞEY ALMAYIN",
+                        "IV sıvı tedavisi",
+                        "Ağrı kesici (morfin)",
+                        "Karın tomografisi",
+                        "MUTLAKA gastroenteroloji uzmanına ACİL gidin",
+                        "Alkol kullanımını DURDURUN",
+                        "Trigliserit yüksekse düşürün"
+                    ]
+                },
+                low: {
+                    title: "Düşük Lipaz",
+                    testName: "Lipaz",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 15,
+                    normalRange: "0-160 U/L",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Normal durum",
+                        "Kronik pankreatit (ileri evre)"
+                    ],
+                    recommendations: [
+                        "Genellikle endişe verici değil",
+                        "Kronik pankreatit varsa pankreas enzim replasmanı"
+                    ]
+                }
+            },
+            monosit: {
+                high: {
+                    title: "Yüksek Monosit (Monositoz)",
+                    testName: "Monosit",
+                    severity: "warning",
+                    icon: "fa-bacteria",
+                    criticality: 60,
+                    normalRange: "2-8% veya 200-800 /µL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Ateş",
+                        "Kilo kaybı",
+                        "Gece terlemeleri"
+                    ],
+                    causes: [
+                        "Kronik enfeksiyonlar (tüberküloz)",
+                        "Yangısal bağırsak hastalıkları",
+                        "Otoimmün hastalıklar (Lupus, RA)",
+                        "Kronik miyelomonositer lösemi (KMML)",
+                        "Sarkoidoz",
+                        "İyileşme döneminde enfeksiyon"
+                    ],
+                    recommendations: [
+                        "Akciğer grafisi (tüberküloz için)",
+                        "Otoimmün testler",
+                        ">1000/µL veya uzun süre yüksek ise hematoloji uzmanına",
+                        "Kemik iliği biyopsisi (lösemi şüphesinde)",
+                        "Enfeksiyon tedavisi",
+                        "Altta yatan hastalığı tedavi edin"
+                    ]
+                },
+                low: {
+                    title: "Düşük Monosit",
+                    testName: "Monosit",
+                    severity: "info",
+                    icon: "fa-check",
+                    criticality: 20,
+                    normalRange: "2-8% veya 200-800 /µL",
+                    symptoms: [
+                        "Genellikle belirti vermez"
+                    ],
+                    causes: [
+                        "Kemik iliği baskılanması",
+                        "Aplastik anemi",
+                        "Hairy cell lösemi",
+                        "Kortikosteroid kullanımı"
+                    ],
+                    recommendations: [
+                        "Diğer kan değerlerine bakın",
+                        "Kemik iliği biyopsisi (pansitopeni varsa)",
+                        "Genellikle tek başına önemli değil"
+                    ]
+                }
+            },
+            notrofil: {
+                high: {
+                    title: "Yüksek Nötrofil (Nötrofili)",
+                    testName: "Nötrofil",
+                    severity: "warning",
+                    icon: "fa-bacteria",
+                    criticality: 70,
+                    normalRange: "40-70% veya 2000-7000 /µL",
+                    symptoms: [
+                        "Ateş",
+                        "Enfeksiyon belirtileri",
+                        "Ağrı ve şişlik",
+                        "Kızarıklık"
+                    ],
+                    causes: [
+                        "Bakteriyel enfeksiyon",
+                        "Yangı ve stres",
+                        "Travma veya yanık",
+                        "Kalp krizi",
+                        "Kortikosteroid kullanımı",
+                        "Kronik miyeloid lösemi (çok yüksekse)",
+                        "Sigara"
+                    ],
+                    recommendations: [
+                        "Enfeksiyon kaynağını bulun",
+                        "Antibiyotik tedavisi (gerekirse)",
+                        "CRP ve sedimentasyon bakın",
+                        ">20,000/µL ise MUTLAKA hematoloji uzmanına",
+                        "Lökosit alkalin fosfataz skoru (LAP)",
+                        "Kemik iliği biyopsisi (lösemi şüphesinde)"
+                    ]
+                },
+                low: {
+                    title: "Düşük Nötrofil (Nötropeni)",
+                    testName: "Nötrofil",
+                    severity: "critical",
+                    icon: "fa-bacteria",
+                    criticality: 90,
+                    normalRange: "40-70% veya 2000-7000 /µL",
+                    symptoms: [
+                        "SIK ve CİDDİ enfeksiyonlar",
+                        "Ateş",
+                        "Ağız yaraları",
+                        "Pnömoni",
+                        "Cilt enfeksiyonları"
+                    ],
+                    causes: [
+                        "Kemoterapi",
+                        "Kemik iliği hastalıkları (lösemi, aplastik anemi)",
+                        "Viral enfeksiyonlar",
+                        "B12/Folik asit eksikliği",
+                        "Otoimmün nötropeni",
+                        "Bazı ilaçlar (antibiyotikler)"
+                    ],
+                    recommendations: [
+                        "<500/µL ise YAŞAMSAL TEHLİKE - enfeksiyon riski çok yüksek",
+                        "ENFEKSİYONLARDAN KORUNUN (maske, hijyen)",
+                        "Kalabalık ortamlardan uzak durun",
+                        "38°C üzeri ateşte ACİL SERVİSE gidin",
+                        "G-CSF tedavisi (Filgrastim)",
+                        "Profilaktik antibiyotik",
+                        "MUTLAKA hematoloji uzmanına ACİL"
+                    ]
+                }
+            },
+            prokalsitonin: {
+                high: {
+                    title: "Yüksek Prokalsitonin (Bakteriyel Sepsis)",
+                    testName: "Prokalsitonin (PCT)",
+                    severity: "critical",
+                    icon: "fa-virus-covid",
+                    criticality: 90,
+                    normalRange: "< 0.05 ng/mL",
+                    symptoms: [
+                        "Yüksek ateş (>38.5°C)",
+                        "Titreme",
+                        "Hızlı kalp atışı",
+                        "Hızlı solunum",
+                        "Düşük tansiyon",
+                        "Konfüzyon"
+                    ],
+                    causes: [
+                        "Bakteriyel sepsis",
+                        "Ciddi bakteriyel enfeksiyon",
+                        "Pnömoni",
+                        "Menenjit",
+                        "Pyelonefrit (böbrek enfeksiyonu)",
+                        "Peritonit"
+                    ],
+                    recommendations: [
+                        ">2.0 ng/mL ise SEPSIS - ACİL SERVİS 🚨",
+                        "Geniş spektrumlu ANTİBİYOTİK hemen başlanmalı",
+                        "Kan kültürü",
+                        "IV sıvı tedavisi",
+                        "Yoğun bakım gerekebilir",
+                        ">10 ng/mL ise septik şok riski",
+                        "MUTLAKA enfeksiyon hastalıkları uzmanına"
+                    ]
+                },
+                low: {
+                    title: "Düşük/Normal Prokalsitonin",
+                    testName: "Prokalsitonin (PCT)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "< 0.05 ng/mL",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Bakteriyel enfeksiyon yok",
+                        "Viral enfeksiyon olabilir"
+                    ],
+                    recommendations: [
+                        "Mükemmel",
+                        "Bakteriyel sepsis riski düşük",
+                        "Antibiyotik gerekmeyebilir"
+                    ]
+                }
+            },
+            protein: {
+                high: {
+                    title: "Yüksek Total Protein",
+                    testName: "Protein (Total)",
+                    severity: "warning",
+                    icon: "fa-egg",
+                    criticality: 60,
+                    normalRange: "6.0-8.3 g/dL",
+                    symptoms: [
+                        "Genellikle belirti vermez",
+                        "Yorgunluk",
+                        "Kemik ağrısı (multipl miyelomda)"
+                    ],
+                    causes: [
+                        "Dehidrasyon",
+                        "Kronik enfeksiyon/iltihap",
+                        "Multipl miyelom",
+                        "Waldenstrom makroglobulinemisi",
+                        "Karaciğer hastalığı"
+                    ],
+                    recommendations: [
+                        "BOL SU İÇİN",
+                        "Protein elektroforezi yaptırın",
+                        "Albumin ve globulin oranına bakın",
+                        ">9 g/dL ise MUTLAKA hematoloji uzmanına",
+                        "İmmünoglobulin düzeyleri",
+                        "Kemik iliği biyopsisi (miyelom şüphesinde)"
+                    ]
+                },
+                low: {
+                    title: "Düşük Total Protein (Hipoproteinemi)",
+                    testName: "Protein (Total)",
+                    severity: "critical",
+                    icon: "fa-egg",
+                    criticality: 75,
+                    normalRange: "6.0-8.3 g/dL",
+                    symptoms: [
+                        "Ödem (bacak, ayak şişliği)",
+                        "Asit (karında sıvı)",
+                        "Yorgunluk",
+                        "Zayıf bağışıklık"
+                    ],
+                    causes: [
+                        "Malnütrisyon",
+                        "Karaciğer hastalığı (siroz)",
+                        "Böbrek hastalığı (nefrotik sendrom)",
+                        "Malabsorpsiyon",
+                        "Yangısal bağırsak hastalıkları",
+                        "Protein kaybettiren enteropati"
+                    ],
+                    recommendations: [
+                        "Yüksek protein diyeti",
+                        "Albumin infüzyonu gerekebilir",
+                        "Karaciğer ve böbrek fonksiyonlarını kontrol ettirin",
+                        "24 saatlik idrar proteini",
+                        "Gastrointestinal değerlendirme",
+                        "MUTLAKA gastroenteroloji/nefroloji uzmanına"
+                    ]
+                }
+            },
+            psa: {
+                high: {
+                    title: "Yüksek PSA (Prostat Sorunu)",
+                    testName: "PSA (Prostat Spesifik Antijen)",
+                    severity: "critical",
+                    icon: "fa-person",
+                    criticality: 80,
+                    normalRange: "< 4.0 ng/mL (50 yaş altı), < 6.5 ng/mL (70+ yaş)",
+                    symptoms: [
+                        "İdrara çıkmada güçlük",
+                        "Zayıf idrar akımı",
+                        "Sık idrara çıkma (özellikle gece)",
+                        "İdrarda kan",
+                        "Pelvik bölgede ağrı"
+                    ],
+                    causes: [
+                        "Benign prostat hiperplazisi (BPH - iyi huylu)",
+                        "Prostat kanseri",
+                        "Prostatit (prostat iltihabı)",
+                        "İdrar yolu enfeksiyonu",
+                        "Yakın zamanda prostat muayenesi",
+                        "Bisiklet sürme"
+                    ],
+                    recommendations: [
+                        ">10 ng/mL ise MUTLAKA üroloji uzmanına",
+                        "Prostat muayenesi (rektal tuşe)",
+                        "Serbest/Total PSA oranı",
+                        "Prostat MR",
+                        "Prostat biyopsisi (kanser şüphesinde)",
+                        "PSA hızı (yıllık artış) önemli",
+                        ">20 ng/mL ise yüksek kanser riski"
+                    ]
+                },
+                low: {
+                    title: "Düşük PSA",
+                    testName: "PSA (Prostat Spesifik Antijen)",
+                    severity: "low",
+                    icon: "fa-check",
+                    criticality: 10,
+                    normalRange: "< 4.0 ng/mL",
+                    symptoms: [
+                        "Belirti vermez (olumlu durum)"
+                    ],
+                    causes: [
+                        "Sağlıklı prostat",
+                        "5-alfa redüktaz inhibitörü kullanımı (Finasterid)"
+                    ],
+                    recommendations: [
+                        "Mükemmel",
+                        "Düşük prostat kanseri riski",
+                        "50 yaş üstü erkeklerde yıllık kontrol"
+                    ]
+                }
+            },
+            pt: {
+                high: {
+                    title: "Uzun PT (Kanama Riski)",
+                    testName: "PT (Protrombin Zamanı)",
+                    severity: "critical",
+                    icon: "fa-clock",
+                    criticality: 80,
+                    normalRange: "11-13.5 saniye",
+                    symptoms: [
+                        "Kolay morarma",
+                        "Burun kanaması",
+                        "Diş eti kanaması",
+                        "Uzun süren kanamalar"
+                    ],
+                    causes: [
+                        "Warfarin kullanımı",
+                        "K vitamini eksikliği",
+                        "Karaciğer hastalığı",
+                        "DIC (yaygın damar içi pıhtılaşma)",
+                        "Pıhtılaşma faktörü eksiklikleri"
+                    ],
+                    recommendations: [
+                        "INR değerine bakın (birlikte değerlendirilir)",
+                        "Warfarin dozunu ayarlayın",
+                        "K vitamini (fitomenadion)",
+                        ">20 saniye ise ACİL SERVİS",
+                        "Taze donmuş plazma (FFP)",
+                        "MUTLAKA hematoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Kısa PT (Tromboz Riski)",
+                    testName: "PT (Protrombin Zamanı)",
+                    severity: "warning",
+                    icon: "fa-clock",
+                    criticality: 65,
+                    normalRange: "11-13.5 saniye",
+                    symptoms: [
+                        "Tromboz riski",
+                        "DVT (derin ven trombozu)",
+                        "Pulmoner emboli riski"
+                    ]
+                },
+                causes: [
+                    "Aşırı K vitamini alımı",
+                    "Yetersiz warfarin dozu",
+                    "Trombofili (genetik)"
+                ],
+                recommendations: [
+                    "Warfarin dozu artırılabilir",
+                    "Trombofili taraması",
+                    "Profilaktik antikoagülasyon düşünün",
+                    "Hematoloji konsültasyonu"
+                ]
+            },
+            t3: {
+                high: {
+                    title: "Yüksek T3 (Hipertiroidizm)",
+                    testName: "T3 (Triiyodotironin)",
+                    severity: "warning",
+                    icon: "fa-prescription-bottle",
+                    criticality: 70,
+                    normalRange: "80-200 ng/dL",
+                    symptoms: [
+                        "Kalp çarpıntısı",
+                        "Kilo kaybı",
+                        "Aşırı terleme",
+                        "Sinirlilik",
+                        "Titreme",
+                        "İshal"
+                    ],
+                    causes: [
+                        "Graves hastalığı",
+                        "Toksik nodüler guatr",
+                        "T3 tirotoksikozisi",
+                        "Aşırı tiroid hormonu ilacı"
+                    ],
+                    recommendations: [
+                        "TSH ve T4 düzeylerini de kontrol ettirin",
+                        "Antitiroid ilaçlar (Propylthiouracil, Methimazole)",
+                        "Beta blokerler",
+                        "Radyoaktif iyot tedavisi",
+                        "Tiroidektomi (ameliyat)",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük T3",
+                    testName: "T3 (Triiyodotironin)",
+                    severity: "warning",
+                    icon: "fa-prescription-bottle",
+                    criticality: 60,
+                    normalRange: "80-200 ng/dL",
+                    symptoms: [
+                        "Yorgunluk",
+                        "Kilo alma",
+                        "Soğuk hissetme",
+                        "Depresyon"
+                    ],
+                    causes: [
+                        "Hipotiroidizm",
+                        "Ciddi hastalıklar (euthyroid sick sendrom)",
+                        "Malnütrisyon",
+                        "Amiodarone kullanımı"
+                    ],
+                    recommendations: [
+                        "TSH ve T4 düzeylerini kontrol ettirin",
+                        "Levotiroksin tedavisi (gerekirse)",
+                        "Altta yatan hastalık tedavisi",
+                        "Endokrinoloji konsültasyonu"
+                    ]
+                }
+            },
+            t4: {
+                high: {
+                    title: "Yüksek T4 (Hipertiroidizm)",
+                    testName: "T4 (Tiroksin)",
+                    severity: "warning",
+                    icon: "fa-prescription-bottle",
+                    criticality: 70,
+                    normalRange: "5.0-12.0 µg/dL (Total T4), 0.8-1.8 ng/dL (Serbest T4)",
+                    symptoms: [
+                        "Kalp çarpıntısı",
+                        "Kilo kaybı",
+                        "Aşırı terleme",
+                        "Sinirlilik ve anksiyete",
+                        "Uyku bozukluğu"
+                    ],
+                    causes: [
+                        "Graves hastalığı",
+                        "Toksik adenoma",
+                        "Aşırı levotiroksin dozu",
+                        "Tiroidit (başlangıç fazı)"
+                    ],
+                    recommendations: [
+                        "TSH ve T3 düzeylerini kontrol ettirin",
+                        "Antitiroid ilaçlar",
+                        "Beta blokerler (kalp çarpıntısı için)",
+                        "Levotiroksin dozunu azaltın (kullanıyorsanız)",
+                        "Radyoaktif iyot tedavisi",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                },
+                low: {
+                    title: "Düşük T4 (Hipotiroidizm)",
+                    testName: "T4 (Tiroksin)",
+                    severity: "warning",
+                    icon: "fa-prescription-bottle",
+                    criticality: 70,
+                    normalRange: "5.0-12.0 µg/dL (Total T4), 0.8-1.8 ng/dL (Serbest T4)",
+                    symptoms: [
+                        "Yorgunluk ve halsizlik",
+                        "Kilo alma",
+                        "Soğuk hissetme",
+                        "Saç dökülmesi",
+                        "Kabızlık",
+                        "Depresyon"
+                    ],
+                    causes: [
+                        "Hashimoto tiroiditi",
+                        "İyot eksikliği",
+                        "Tiroid ameliyatı sonrası",
+                        "Radyoaktif iyot tedavisi sonrası",
+                        "Hipofiz hastalığı"
+                    ],
+                    recommendations: [
+                        "TSH ve T3 düzeylerini kontrol ettirin",
+                        "Levotiroksin (Thyroxine) tedavisi başlayın",
+                        "İyot içeren besinler",
+                        "Düzenli TSH kontrolü (3-6 ayda bir)",
+                        "Doktor kontrolünde doz ayarlaması",
+                        "MUTLAKA endokrinoloji uzmanına gidin"
+                    ]
+                }
+            }
+        };
+
+        // Seçilen test ve duruma göre veri döndür
+        const test = testDatabase[testId];
+        if (!test) {
+            return {
+                title: "Veri Bulunamadı",
+                testName: "Bilinmeyen Test",
+                severity: "info",
+                icon: "fa-question",
+                criticality: 0,
+                normalRange: "Bilgi yok",
+                symptoms: ["Veri bulunamadı"],
+                causes: ["Veri bulunamadı"],
+                recommendations: ["Lütfen farklı bir test seçin"]
+            };
+        }
+        
+        return test[condition];
+    }
+</script>

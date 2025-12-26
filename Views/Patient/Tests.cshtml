@@ -1,0 +1,150 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "patient-bg";
+}
+
+<style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .page-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .back-button {
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #0f837d;
+        font-size: 20px;
+    }
+
+    .back-button:hover {
+        background: #0f837d;
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0px 4px 15px rgba(15, 131, 125, 0.3);
+    }
+
+    .page-title {
+        color: #0f837d;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 0;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .back-btn {
+        display: none;
+    }
+
+    .tests-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    }
+
+    .test-date-item {
+        background: #0f837d;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 10px;
+        margin: 10px 0;
+        display: block;
+        font-size: 18px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: 0.25s ease;
+    }
+
+    .test-date-item:hover {
+        background: #0c6f69;
+        transform: translateY(-3px);
+        color: white;
+    }
+
+    .upload-btn {
+        background: #0f837d;
+        padding: 12px 20px;
+        color: white;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 25px;
+        transition: 0.25s ease;
+    }
+
+    .upload-btn:hover {
+        background: #0c6a63;
+        transform: translateY(-3px);
+        color: white;
+    }
+
+    .back-btn {
+        display: none;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/Patient/Dashboard" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 class="page-title">Tahlillerim</h2>
+    </div>
+
+    <div class="tests-container">
+        <a href="/Patient/UploadTest" class="upload-btn">
+            Tahlil Yükle
+        </a>
+
+        <h4 style="margin-top:20px; color:#444;">Geçmiş Tahlillerim</h4>
+
+        <div style="margin-top:15px;">
+            @if (ViewBag.TestDates != null && ViewBag.TestDates.Count > 0)
+            {
+                foreach (var date in ViewBag.TestDates)
+                {
+                    string formatted = date.ToString("dd.MM.yyyy");
+
+                    <a href="/Patient/TestDetails?date=@formatted" class="test-date-item">
+                        @formatted
+                    </a>
+                }
+            }
+            else
+            {
+                <p style="margin-top:15px; color:#666;">Henüz yüklenmiş tahlil bulunmuyor.</p>
+            }
+        </div>
+    </div>
+</div>

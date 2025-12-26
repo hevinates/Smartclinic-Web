@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using smartclinic_web.Data;
 
@@ -10,9 +11,11 @@ using smartclinic_web.Data;
 namespace smartclinic_web.Migrations
 {
     [DbContext(typeof(SmartClinicDbContext))]
-    partial class SmartClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251213224635_AddAppointmentAndMessage")]
+    partial class AddAppointmentAndMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -88,51 +91,6 @@ namespace smartclinic_web.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("smartclinic_web.Models.PatientProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Age")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("BloodGroup")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("Height")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("Weight")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PatientProfiles");
                 });
 
             modelBuilder.Entity("smartclinic_web.Models.TestResult", b =>
@@ -243,24 +201,6 @@ namespace smartclinic_web.Migrations
                     b.Navigation("Receiver");
 
                     b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("smartclinic_web.Models.PatientProfile", b =>
-                {
-                    b.HasOne("smartclinic_web.Models.User", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("smartclinic_web.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("smartclinic_web.Models.TestResult", b =>
