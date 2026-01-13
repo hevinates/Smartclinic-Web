@@ -24,9 +24,6 @@
 - [Proje Yapısı](#-proje-yapısı)
 - [API Dokümantasyonu](#-api-dokümantasyonu)
 - [Veritabanı Şeması](#-veritabanı-şeması)
-- [Ekran Görüntüleri](#-ekran-görüntüleri)
-- [Katkıda Bulunma](#-katkıda-bulunma)
-- [Lisans](#-lisans)
 
 ---
 
