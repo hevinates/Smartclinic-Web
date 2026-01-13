@@ -199,6 +199,12 @@ namespace smartclinic_web.Controllers
             return View();
         }
 
+        // ------------------ AI CHATBOT ------------------
+        public IActionResult AIChatbot()
+        {
+            return View();
+        }
+
         // ------------------ CHATBOT API ------------------
         [HttpPost]
         public async Task<IActionResult> ChatMessage([FromBody] ChatRequest request)
@@ -244,7 +250,7 @@ Kurallar:
 
                 var httpClient = _httpClientFactory.CreateClient();
                 
-                var apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={apiKey}";
+                var apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key={apiKey}";
 
                 var requestBody = new
                 {

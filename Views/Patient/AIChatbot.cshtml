@@ -1,0 +1,440 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "patient-bg";
+}
+
+<style>
+    .patient-bg {
+        background-image: url('/images/patient_bg.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        height: calc(100vh - 40px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .page-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px 40px;
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .back-button {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #0f837d;
+        font-size: 18px;
+    }
+
+    .back-button:hover {
+        background: #0f837d;
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .page-title {
+        color: #0f837d;
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .chat-container {
+        flex: 1;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.10);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .quick-actions {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        flex-shrink: 0;
+    }
+
+    .quick-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .quick-btn.purple { background: rgba(128, 0, 128, 0.1); color: purple; }
+    .quick-btn.blue { background: rgba(0, 123, 255, 0.1); color: #007bff; }
+    .quick-btn.green { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+    .quick-btn.orange { background: rgba(255, 193, 7, 0.15); color: #e67700; }
+
+    .quick-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .messages-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .message {
+        display: flex;
+        gap: 10px;
+        max-width: 85%;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .message.bot {
+        align-self: flex-start;
+    }
+
+    .message-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.bot .message-avatar {
+        background: linear-gradient(135deg, #0f837d, #0c6963);
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, #6c757d, #495057);
+    }
+
+    .message-content {
+        padding: 12px 16px;
+        border-radius: 18px;
+        line-height: 1.5;
+        font-size: 14px;
+    }
+
+    .message.bot .message-content {
+        background: #f1f3f4;
+        color: #333;
+        border-bottom-left-radius: 4px;
+    }
+
+    .message.user .message-content {
+        background: linear-gradient(135deg, #0f837d, #0c6963);
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    .typing-indicator {
+        display: none;
+        align-self: flex-start;
+        padding: 15px 20px;
+        background: #f1f3f4;
+        border-radius: 18px;
+        margin-left: 46px;
+    }
+
+    .typing-indicator.active {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .typing-indicator span {
+        width: 8px;
+        height: 8px;
+        background: #0f837d;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+    @@keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-area {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .message-input {
+        flex: 1;
+        padding: 12px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .message-input:focus {
+        border-color: #0f837d;
+    }
+
+    .send-btn {
+        width: 48px;
+        height: 48px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0f837d, #0c6963);
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .send-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(15, 131, 125, 0.4);
+    }
+
+    .send-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .welcome-message {
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+    }
+
+    .welcome-message i {
+        font-size: 60px;
+        color: #0f837d;
+        margin-bottom: 15px;
+    }
+
+    .welcome-message h3 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/Patient/Dashboard" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 class="page-title">
+            <i class="fa-solid fa-robot"></i>
+            AI Sağlık Asistanı
+        </h2>
+    </div>
+
+    <div class="chat-container">
+        <div class="quick-actions">
+            <button class="quick-btn purple" onclick="sendQuickMessage('Tahlillerimi analiz et')">
+                <i class="fa-solid fa-flask"></i> Tahlillerimi Analiz Et
+            </button>
+            <button class="quick-btn blue" onclick="sendQuickMessage('Bana sağlık önerisi ver')">
+                <i class="fa-solid fa-lightbulb"></i> Sağlık Önerisi
+            </button>
+            <button class="quick-btn green" onclick="sendQuickMessage('Profil bilgilerimi göster')">
+                <i class="fa-solid fa-user"></i> Profilim
+            </button>
+            <button class="quick-btn orange" onclick="sendQuickMessage('Nasıl daha sağlıklı yaşayabilirim?')">
+                <i class="fa-solid fa-heart-pulse"></i> Sağlıklı Yaşam
+            </button>
+        </div>
+
+        <div class="messages-area" id="messagesArea">
+            <div class="welcome-message" id="welcomeMessage">
+                <i class="fa-solid fa-robot"></i>
+                <h3>Merhaba! 👋</h3>
+                <p>Ben SmartClinic AI Sağlık Asistanınızım.<br>
+                Size nasıl yardımcı olabilirim?</p>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span style="margin-left: 8px; font-size: 13px; color: #666;">AI düşünüyor...</span>
+        </div>
+
+        <div class="input-area">
+            <input type="text" class="message-input" id="messageInput" 
+                   placeholder="Sağlık sorunuzu yazın..." 
+                   onkeypress="handleKeyPress(event)">
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let isLoading = false;
+
+    function addMessage(text, isUser) {
+        const messagesArea = document.getElementById('messagesArea');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        
+        if (welcomeMessage) {
+            welcomeMessage.style.display = 'none';
+        }
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.innerHTML = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
+        
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.innerHTML = formatMessage(text);
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+        messagesArea.appendChild(messageDiv);
+        
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    function formatMessage(text) {
+        // Basit markdown formatlaması
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+    }
+
+    function showTyping(show) {
+        const indicator = document.getElementById('typingIndicator');
+        indicator.classList.toggle('active', show);
+        if (show) {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (!message || isLoading) return;
+        
+        input.value = '';
+        addMessage(message, true);
+        
+        isLoading = true;
+        document.getElementById('sendBtn').disabled = true;
+        showTyping(true);
+
+        try {
+            const response = await fetch('/api/chatbot/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+            showTyping(false);
+            addMessage(data.message || 'Bir hata oluştu.', false);
+        } catch (error) {
+            showTyping(false);
+            addMessage('❌ Bağlantı hatası oluştu. Lütfen tekrar deneyin.', false);
+            console.error('Error:', error);
+        } finally {
+            isLoading = false;
+            document.getElementById('sendBtn').disabled = false;
+            document.getElementById('messageInput').focus();
+        }
+    }
+
+    function sendQuickMessage(message) {
+        document.getElementById('messageInput').value = message;
+        sendMessage();
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    // Sayfa yüklendiğinde hoşgeldin mesajı
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (welcomeMessage) {
+                welcomeMessage.style.display = 'none';
+            }
+            addMessage('Merhaba! 👋 Ben SmartClinic AI Sağlık Asistanınızım.\n\nSize nasıl yardımcı olabilirim? Sağlık sorularınızı sorabilir, tahlil sonuçlarınız hakkında bilgi alabilir veya genel sağlık önerileri isteyebilirsiniz.', false);
+        }, 500);
+    });
+</script>

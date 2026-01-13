@@ -76,6 +76,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/hevinates/Developer/smartclinic_web/Views/Patient/AIChatbot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9BSUNoYXRib3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/hevinates/Developer/smartclinic_web/Views/Patient/BookAppointment.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF0aWVudC9Cb29rQXBwb2ludG1lbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

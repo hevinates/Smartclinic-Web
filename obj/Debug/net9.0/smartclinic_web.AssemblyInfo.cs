@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("smartclinic_web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f49d03202cca58efe16a967f49e86ed8898c2aa5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7a538e54b839cfb42029f677653de240e69a37d8")]
 [assembly: System.Reflection.AssemblyProductAttribute("smartclinic_web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("smartclinic_web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
