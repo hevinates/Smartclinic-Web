@@ -6,11 +6,10 @@
 ![C#](https://img.shields.io/badge/C%23-12.0-239120?style=for-the-badge&logo=csharp&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Gemini AI](https://img.shields.io/badge/Gemini%20AI-2.5%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 **Hastaneler, doktorlar ve hastalar için geliştirilmiş, yapay zeka destekli web tabanlı sağlık yönetim platformu.**
 
-[Özellikler](#-özellikler) • [Kurulum](#-kurulum) • [API Dokümantasyonu](#-api-dokümantasyonu) • [Ekran Görüntüleri](#-ekran-görüntüleri) • [Katkıda Bulunma](#-katkıda-bulunma)
+[Özellikler](#-özellikler) • [Kurulum](#-kurulum) • [API Dokümantasyonu](#-api-dokümantasyonu) 
 
 </div>
 
@@ -444,21 +443,6 @@ GET /api/PatientProfile/{userId}/tests
 
 ---
 
-## 📸 Ekran Görüntüleri
-
-<div align="center">
-
-| Giriş Sayfası | Hasta Dashboard | AI Asistan |
-|:-------------:|:---------------:|:----------:|
-| ![Login](https://via.placeholder.com/250x150?text=Giris) | ![Dashboard](https://via.placeholder.com/250x150?text=Dashboard) | ![Chatbot](https://via.placeholder.com/250x150?text=AI+Asistan) |
-
-| Doktor Paneli | Randevular | Mesajlar |
-|:-------------:|:----------:|:--------:|
-| ![Doctor](https://via.placeholder.com/250x150?text=Doktor) | ![Appointments](https://via.placeholder.com/250x150?text=Randevular) | ![Messages](https://via.placeholder.com/250x150?text=Mesajlar) |
-
-</div>
-
----
 
 ## 🔧 Yapılandırma
 
@@ -496,43 +480,6 @@ builder.Services.AddCors(options =>
 
 ---
 
-## 🤝 Katkıda Bulunma
-
-Katkılarınızı memnuniyetle karşılıyoruz!
-
-### Nasıl Katkıda Bulunabilirim?
-
-1. **Fork** edin
-2. Feature branch oluşturun (`git checkout -b feature/YeniOzellik`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Yeni özellik eklendi'`)
-4. Branch'inizi push edin (`git push origin feature/YeniOzellik`)
-5. **Pull Request** açın
-
-### Geliştirme Kuralları
-- C# coding conventions'larını takip edin
-- Yeni özellikler için XML documentation yazın
-- PR açmadan önce `dotnet build` ve `dotnet test` çalıştırın
-- Commit mesajlarını açıklayıcı yazın
-
----
-
-## 📄 Lisans
-
-Bu proje **MIT Lisansı** altında lisanslanmıştır.
-
-```
-MIT License
-
-Copyright (c) 2024-2026 SmartClinic
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software...
-```
-
----
 
 ## 📞 İletişim
 
@@ -542,7 +489,6 @@ copies of the Software...
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/hevinates)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/hevinates)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:hevinates@gmail.com)
 
 </div>
 
@@ -553,7 +499,6 @@ copies of the Software...
 | Proje | Açıklama | Link |
 |-------|----------|------|
 | 📱 SmartClinic Mobil | Flutter mobil uygulaması | [GitHub](https://github.com/hevinates/Smartclinic-Mobil) |
-| 🔌 SmartClinic API | PostgreSQL tabanlı REST API | [GitHub](https://github.com/hevinates/Smartclinic-Api) |
 
 ---
 
